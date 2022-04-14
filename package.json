@@ -20,5 +20,6 @@
     "msnodesqlv8": "^2.4.6",
     "mssql": "^8.0.2",
     "nodemon": "^2.0.15"
-  }
+  },
+  "postinstall": "ng build --aot --target=production"
 }
