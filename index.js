@@ -21,16 +21,18 @@ app.use(function (req, res, next) {
 
 const userAuth = require('./app/Routers/auth.route')
 const product = require('./app/Routers/product.route')
+const users = require('./app/Routers/user.route')
 app.use('/api/v1/user', userAuth);
 app.use('/api/v1/product', product)
-// function authenToken(req, res, next) {
-//     //'Bearer [token]'
-//     const token = req.headers?.authorization?.split(' ')[1]
-//     if (!token) res.sendStatus(401);
-//     jwt.verify(token, process.env.ACCESS_TOKEN, (err, res) => {
-//         next();
-//     })
-// }
+app.use('/api/v1/users', authenToken, users)
+function authenToken(req, res, next) {
+    //'Bearer [token]'
+    const token = req.headers?.authorization?.split(' ')[1]
+    if (!token) res.sendStatus(401);
+    jwt.verify(token, process.env.ACCESS_TOKEN, (err, res) => {
+        next();
+    })
+}
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
