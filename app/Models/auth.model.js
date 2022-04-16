@@ -2,6 +2,19 @@ const conn = require('../../connect');
 const sql = require('mssql');
 
 module.exports = function () {
+    this.getEmail = async function (newData, result) {
+        const sqlString1 = 'Select Email From Account Where Email = @email'
+        const pool = await conn
+        return pool.request()
+            .input('email', sql.NVarChar, newData.Email)
+            .query(sqlString1, function (error, rec) {
+                if (rec.recordset.length > 0) {
+                    result(false, rec.recordset);
+                }
+                else
+                    result(true, { message: 'Email is exist!' });
+            })
+    }
     this.regis = async function (newData, result) {
         const sqlString = 'INSERT INTO Account (Code,Name,Gender,Dob,Email,Phone,Address,UserName,Password,StatusId,ImageId) VALUES(@code,@name,@gender,@dob,@email,@phone,@address,@userName,@password,1,@imageId)';
         const pool = await conn
@@ -25,7 +38,7 @@ module.exports = function () {
             })
     }
     this.postUser = async function (newData, result) {
-        const sqlString = 'SELECT Email,Password FROM Account Where Email = @email';
+        const sqlString = 'SELECT Id,Code,Email,Password FROM Account Where Email = @email';
         const pool = await conn
         return pool.request()
             .input('email', sql.NVarChar, newData.Email)
@@ -36,6 +49,9 @@ module.exports = function () {
                 else
                     result(true, null);
             })
+    }
+    this.signOut = async function () {
+
     }
 }
 

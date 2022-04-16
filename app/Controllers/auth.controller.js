@@ -3,6 +3,12 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config();
 var users = new User();
 
+exports.checkMail = function (req, res, next) {
+    users.getEmail(req.body, function (err, data) {
+        if (err) { next(); }
+        else { res.send({ message: "Email is exist!" }); }
+    })
+}
 exports.register = function (req, res) {
     users.regis(req.body, function (err, data) {
         res.send({ data: data, error: err })
