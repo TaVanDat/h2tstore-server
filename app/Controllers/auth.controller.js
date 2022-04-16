@@ -4,7 +4,7 @@ require('dotenv').config();
 var users = new User();
 
 exports.register = function (req, res) {
-    users.regis(function (err, data) {
+    users.regis(req.body, function (err, data) {
         res.send({ data: data, error: err })
     })
 }
