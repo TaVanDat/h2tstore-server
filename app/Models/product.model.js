@@ -4,7 +4,7 @@ const sql = require('mssql')
 //result is callback function
 module.exports = function () {
     this.getAll = async function (result) {
-        const sqlString = 'SELECT * FROM Image';
+        const sqlString = 'SELECT * FROM Account';
         const pool = await conn
         return pool.request()
             .query(sqlString, function (error, rec) {

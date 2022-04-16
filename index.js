@@ -1,6 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -17,8 +19,18 @@ app.use(function (req, res, next) {
     next();
 })
 
+const userAuth = require('./app/Routers/auth.route')
 const product = require('./app/Routers/product.route')
+app.use('/api/v1/user', userAuth);
 app.use('/api/v1/product', product)
+// function authenToken(req, res, next) {
+//     //'Bearer [token]'
+//     const token = req.headers?.authorization?.split(' ')[1]
+//     if (!token) res.sendStatus(401);
+//     jwt.verify(token, process.env.ACCESS_TOKEN, (err, res) => {
+//         next();
+//     })
+// }
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
