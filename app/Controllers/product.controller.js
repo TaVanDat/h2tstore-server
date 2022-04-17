@@ -13,6 +13,12 @@
 const Product = require('../Models/product.model');
 var product = new Product();
 
+exports.checkProduct = function (req, res, next) {
+    users.getEmail(req.body, function (err, data) {
+        if (err) { next(); }
+        else { res.send({ data }); }
+    })
+}
 exports.getList = function (req, res) {
     product.getAll(function (err, data) {
         res.send({ data: data, error: err })

@@ -71,4 +71,17 @@ module.exports = function () {
                     result(true, { message: "Xóa không thành công!" });
             })
     }
+    this.getProduct = async function (newData, result) {
+        const sqlString1 = 'Select Email From Product Where Code = @code'
+        const pool = await conn
+        return pool.request()
+            .input('code', sql.NVarChar, newData.Code)
+            .query(sqlString1, function (error, rec) {
+                if (rec.recordset.length > 0) {
+                    result(false, rec.recordset);
+                }
+                else
+                    result(true, { message: 'Product is exist!' });
+            })
+    }
 }
