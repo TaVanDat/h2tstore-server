@@ -22,7 +22,7 @@ app.use(function (req, res, next) {
 const userAuth = require('./app/Routers/auth.route')
 const product = require('./app/Routers/product.route')
 const users = require('./app/Routers/user.route')
-app.use('/api/v1/user', userAuth);
+app.use('/api/v1/authentication', userAuth);
 app.use('/api/v1/product', product)
 app.use('/api/v1/users', authenToken, users)
 function authenToken(req, res, next) {
