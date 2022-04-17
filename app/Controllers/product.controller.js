@@ -1,15 +1,3 @@
-// const sql = require('mssql');
-// const config = {
-//     "user": 'sa',
-//   "password": '12345',
-//   "server": 'localhost',
-//   "database": 'H2TShopDB',
-//   "port":1433,
-//   options: {
-//     encrypt: false
-//     },
-// };
-// const conn = require('../../connect');
 const Product = require('../Models/product.model');
 var product = new Product();
 
