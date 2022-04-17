@@ -27,25 +27,23 @@ module.exports = function () {
                     result(true, null);
             })
     }
-    // this.update = async function (id, newData, result) {
-    //     const sqlString = "update Image set Code = @code, Name = @name, Gender= @gender, Dob = @dob, Phone= @phone, Address = @address, ImageId= @imageId, where Id = @id";
-    //     const pool = await conn
-    //     return pool.request()
-    //         .input('id', sql.BigInt, id)
-    //         .input('code', sql.NVarChar, newData.Code)
-    //         .input('name', sql.NVarChar, newData.Name)
-    //         .input('gender', sql.NVarChar, newData.Gender)
-    //         .input('dob', sql.DateTime, newData.Dob)
-    //         .input('phone', sql.NVarChar, newData.Phone)
-    //         .input('address', sql.NVarChar, newData.Address)
-    //         .input('imageId', sql.BigInt, newData.ImageId)
-    //         .query(sqlString, function (err, response) {
-    //             if (!err) {
-    //                 result(null, { message: "Thành công!", status: 200 })
-    //             }
-    //             else result(true, { message: "Không thành công!" })
-    //         })
-
-    // }
+    this.update = async function (id, newData, result) {
+        const sqlString = "update Account set Name = @name, Gender= @gender, Dob = @dob, Phone= @phone, Address = @address, ImageId= @imageId where Id = @id";
+        const pool = await conn
+        return pool.request()
+            .input('id', sql.BigInt, Number(id))
+            .input('name', sql.NVarChar, newData.Name)
+            .input('gender', sql.NVarChar, newData.Gender)
+            .input('dob', sql.DateTime, newData.Dob)
+            .input('phone', sql.NVarChar, newData.Phone)
+            .input('address', sql.NVarChar, newData.Address)
+            .input('imageId', sql.BigInt, newData.ImageId)
+            .query(sqlString, function (err, response) {
+                if (!err) {
+                    result(null, response.recordset)
+                }
+                else result(true, { message: "Không thành công!" })
+            })
+    }
 }
 

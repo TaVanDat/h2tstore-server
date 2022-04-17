@@ -3,12 +3,6 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config();
 var user = new getUsers();
 
-// exports.checkMail = function (req, res, next) {
-//     user.getEmail(req.body, function (err, data) {
-//         if (err) { next(); }
-//         else { res.send({ message: "Email is exist!" }); }
-//     })
-// }
 exports.checkLogin = function (req, res, next) {
     try {
         const token = req.headers?.authorization?.split(' ')[1]
@@ -35,12 +29,17 @@ exports.userId = function (req, res) {
     try {
         user.getUserById(req.params.id, function (err, data) {
             res.send({ data: { message: 'SUCCESS', data }, error: err })
-            // const email = data.find(user=>user.Email==req.body.Email)
-            // const accessToken = jwt.sign(req.body.Email, process.env.ACCESS_TOKEN)
-            // res.send({ data: { message: 'LOGIN_SUCCESS', data, token: accessToken }, error: err })
         })
     } catch (error) {
         res.sendStatus(500)
     }
-
+}
+exports.updateUser = function (req, res) {
+    try {
+        user.update(req.data, req.body, function (err, data) {
+            res.send({ data: { message: 'SUCCESS', data }, error: err })
+        })
+    } catch (err) {
+        res.sendStatus(500)
+    }
 }

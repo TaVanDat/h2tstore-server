@@ -30,12 +30,16 @@ function authenToken(req, res, next) {
     try {
         const token = req.headers?.authorization?.split(' ')[1]
         if (!token) { res.sendStatus(401); return }
-        jwt.verify(token, process.env.ACCESS_TOKEN, (err, res) => {
+        jwt.verify(token, process.env.ACCESS_TOKEN, (err, data) => {
             if (err) res.sendStatus(403)
-            next();
+            else {
+                // console.log(data.Id);
+                req.data = data.Id
+                next();
+            }
         })
     } catch (error) {
-        res.sendStatus(403)
+        res.status(403).send({ err: [{ error }] })
     }
 }
 

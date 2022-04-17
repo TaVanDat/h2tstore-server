@@ -17,7 +17,7 @@ exports.register = function (req, res) {
 exports.login = function (req, res) {
     users.postUser(req.body, function (err, data) {
         // const email = data.find(user=>user.Email==req.body.Email)
-        const user = { Id: data.Id, Email: data.Email, Code: data.Code }
+        const user = { Id: data[0].Id, Email: data[0].Email, Code: data[0].Code }
         const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: "1h" })
         res.send({ data: { message: 'LOGIN_SUCCESS', data, token: accessToken }, error: err })
     })
