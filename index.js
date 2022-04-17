@@ -27,11 +27,16 @@ app.use('/api/v1/product', product)
 app.use('/api/v1/users', authenToken, users)
 function authenToken(req, res, next) {
     //'Bearer [token]'
-    const token = req.headers?.authorization?.split(' ')[1]
-    if (!token) res.sendStatus(401);
-    jwt.verify(token, process.env.ACCESS_TOKEN, (err, res) => {
-        next();
-    })
+    try {
+        const token = req.headers?.authorization?.split(' ')[1]
+        if (!token) { res.sendStatus(401); return }
+        jwt.verify(token, process.env.ACCESS_TOKEN, (err, res) => {
+            if (err) res.sendStatus(403)
+            next();
+        })
+    } catch (error) {
+        res.sendStatus(403)
+    }
 }
 
 app.listen(PORT, () => {
