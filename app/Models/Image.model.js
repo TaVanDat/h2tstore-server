@@ -12,7 +12,7 @@ module.exports = function () {
             .input('color', sql.NVarChar, newData.Color)
             .query(sqlString, function (err, rec) {
                 if (!err) {
-                    result(null, { message: "Thêm thành công!" })
+                    result(null, rec.recordset)
                 }
                 else { result(true, { message: "Thêm không thành công!" }) }
             })
@@ -59,4 +59,18 @@ module.exports = function () {
                     result(true, { message: 'Product is exist!' });
             })
     }
+    this.getImage = async function (result) {
+        const sqlString1 = 'Select * From Product where Id = 2 or Id = 3'
+        const pool = await conn
+        return pool.request()
+            // .input('id', sql.BigInt, id)
+            .query(sqlString1, function (error, rec) {
+                if (rec.recordset.length > 0) {
+                    result(false, rec.recordset);
+                }
+                else
+                    result(true, { message: 'Error!' });
+            })
+    }
+
 }
