@@ -3,7 +3,9 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const compression = require('compression');
 const app = express();
+app.use(compression());
 
 const PORT = process.env.PORT || 5000;
 // const sql = require('mssql')

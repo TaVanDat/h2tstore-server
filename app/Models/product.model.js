@@ -65,13 +65,21 @@ module.exports = function () {
             })
     }
     this.update = async function (id, newData, result) {
-        const sqlString = "update Image set Code = @code, Name = @name, Color= @color where Id = @id";
+        const sqlString = "update Product set Name = @name, Description = @description, Price = @price, StatusId = @statusId, UnitOfMeasureId = @unitOfMeasureId, SalePrice = @salePrice, Quantity = @quantity, CategoryId = @categoryId, BuyerStoreId = @buyerStoreId, Image = @image, Size = @size where Id = @id";
         const pool = await conn
         return pool.request()
-            .input('id', sql.Int, id)
-            .input('code', sql.NVarChar, String(newData.Code))
+            .input('id', sql.BigInt, id)
             .input('name', sql.NVarChar, newData.Name)
-            .input('color', sql.NVarChar, newData.Color)
+            .input('description', sql.NVarChar, newData.Description)
+            .input('price', sql.Decimal, newData.Price)
+            .input('statusId', sql.BigInt, newData.StatusId)
+            .input('unitOfMeasureId', sql.BigInt, newData.UnitOfMeasureId)
+            .input('salePrice', sql.Decimal, newData.SalePrice)
+            .input('quantity', sql.Decimal, newData.Quantity)
+            .input('categoryId', sql.BigInt, newData.CategoryId)
+            .input('buyerStoreId', sql.BigInt, newData.BuyerStoreId)
+            .input('image', sql.NVarChar, newData.Image)
+            .input('size', sql.NVarChar, newData.Size)
             .query(sqlString, function (err, response) {
                 if (!err) {
                     result(null, { message: "Thành công!", status: 200 })

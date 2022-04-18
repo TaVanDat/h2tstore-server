@@ -4,7 +4,6 @@ var product = new Product();
 exports.checkProduct = function (req, res, next) {
     try {
         let checks = { Code: req.body.Code, id: req.params.id }
-        if (!Number(checks.id)) return res.status(400).json({ data: { message: "Bad Request" }, error: true })
         if (checks.Code) {
             product.checkProduct(checks, function (err, data) {
                 if (err) { next(); }
@@ -12,6 +11,7 @@ exports.checkProduct = function (req, res, next) {
             })
         }
         else {
+            if (!Number(checks.id)) return res.status(400).json({ data: { message: "Bad Request" }, error: true })
             product.checkProduct(checks, function (err, data) {
                 if (!err) { next(); }
                 else { return res.status(404).json({ message: "Product isn't exist!" }); }
@@ -90,7 +90,9 @@ exports.getById = function (req, res) {
 exports.addNew = function (req, res) {
     try {
         product.addNews(req.body, function (err, data) {
-            return res.send({ data: data, error: err })
+            if (!err)
+                return res.send({ data: data, error: err })
+            return res.status(400).json({ data: data, error: err })
         })
     } catch (error) {
         return res.sendStatus(500);
@@ -98,8 +100,11 @@ exports.addNew = function (req, res) {
 }
 exports.update = function (req, res) {
     try {
+        if (!Number(req.params.id)) return res.status(400).json({ data: { message: "Bad Request" }, error: true })
         product.update(req.params.id, req.body, function (err, data) {
-            return res.send({ data: data, error: err })
+            if (!err)
+                return res.send({ data: data, error: err })
+            return res.status(400).json({ data: data, error: err })
         })
     } catch (error) {
         return res.sendStatus(500);
