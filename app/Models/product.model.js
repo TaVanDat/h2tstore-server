@@ -29,7 +29,7 @@ module.exports = function () {
             })
     }
     this.checkProduct = async function (newData, result) {
-        const sqlString1 = 'Select Id,Code From Image Where Code = @code'
+        const sqlString1 = 'Select Id,Code From Product Where Code = @code'
         const pool = await conn
         return pool.request()
             .input('code', sql.NVarChar, newData.Code)
@@ -58,9 +58,9 @@ module.exports = function () {
             .input('size', sql.NVarChar, newData.Size)
             .query(sqlString, function (err, rec) {
                 if (!err) {
-                    result(null, newData)
+                    result(null, { message: "SUCCESS" })
                 }
-                else { result(true, { message: "Thêm không thành công!" }) }
+                else { result(true, { message: "FAILED", statusCode: 400, status: 'Bad Request' }) }
             })
     }
     this.update = async function (id, newData, result) {
@@ -90,19 +90,6 @@ module.exports = function () {
                 }
                 else
                     result(true, { message: "Xóa không thành công!" });
-            })
-    }
-    this.getProduct = async function (newData, result) {
-        const sqlString1 = 'Select Email From Product Where Code = @code'
-        const pool = await conn
-        return pool.request()
-            .input('code', sql.NVarChar, newData.Code)
-            .query(sqlString1, function (error, rec) {
-                if (rec.recordset.length > 0) {
-                    result(false, rec.recordset);
-                }
-                else
-                    result(true, { message: 'Product is exist!' });
             })
     }
 }
