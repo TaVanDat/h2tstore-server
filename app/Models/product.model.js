@@ -29,16 +29,17 @@ module.exports = function () {
             })
     }
     this.checkProduct = async function (newData, result) {
-        const sqlString1 = 'Select Id,Code From Product Where Code = @code'
+        const sqlString1 = 'Select Id,Code From Product Where Code = @code or Id = @id'
         const pool = await conn
         return pool.request()
+            .input('id', sql.BigInt, newData.id)
             .input('code', sql.NVarChar, newData.Code)
             .query(sqlString1, function (error, rec) {
                 if (rec.recordset.length > 0) {
                     result(false, rec.recordset);
                 }
                 else
-                    result(true, { message: 'Product is exist!' });
+                    result(true, {});
             })
     }
     this.addNews = async function (newData, result) {
@@ -80,10 +81,10 @@ module.exports = function () {
 
     }
     this.deleteId = async function (id, result) {
-        const sqlString = "delete from Image  where Id = @id";
+        const sqlString = "delete from Product  where Id = @id";
         const pool = await conn
         return pool.request()
-            .input('id', sql.Int, id)
+            .input('id', sql.BigInt, id)
             .query(sqlString, function (err, rec) {
                 if (!err) {
                     result(null, { message: "Xóa thành công!" });

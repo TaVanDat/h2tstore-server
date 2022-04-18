@@ -3,12 +3,22 @@ var product = new Product();
 
 exports.checkProduct = function (req, res, next) {
     try {
-        product.checkProduct(req.body, function (err, data) {
-            if (err) { next(); }
-            else { res.send({ message: 'Product is exist!' }); }
-        })
+        let checks = { Code: req.body.Code, id: req.params.id }
+        if (!Number(checks.id)) return res.status(400).json({ data: { message: "Bad Request" }, error: true })
+        if (checks.Code) {
+            product.checkProduct(checks, function (err, data) {
+                if (err) { next(); }
+                else { return res.status(400).json({ message: 'Product is exist!' }); }
+            })
+        }
+        else {
+            product.checkProduct(checks, function (err, data) {
+                if (!err) { next(); }
+                else { return res.status(404).json({ message: "Product isn't exist!" }); }
+            })
+        }
     } catch (error) {
-        res.sendStatus(500);
+        return res.sendStatus(500);
     }
 
 }
@@ -16,6 +26,7 @@ exports.checkProduct = function (req, res, next) {
 exports.getList = function (req, res) {
     try {
         product.getAll(function (err, data) {
+            if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
             data = data.map((item, index, data) => {
                 return {
                     "Id": item.Id,
@@ -36,17 +47,19 @@ exports.getList = function (req, res) {
                     "Size": item.Size ? item.Size.split(',') : null
                 }
             })
-            res.send({ data: { message: "SUCCESS", data }, error: err })
+            return res.send({ data: { message: "SUCCESS", data }, error: false })
         })
     } catch (error) {
-        res.sendStatus(500);
+        return res.sendStatus(500);
     }
 }
 
 // get follow id product
 exports.getById = function (req, res) {
     try {
+        if (!Number(req.params.id)) return res.status(400).json({ data: { message: "Bad Request" }, error: true })
         product.getDetail(req.params.id, function (err, data) {
+            if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
             data = {
                 "Id": data[0].Id,
                 "Code": data[0].Code,
@@ -65,10 +78,11 @@ exports.getById = function (req, res) {
                 "Image": data[0].Image ? data[0].Image.split(',') : null,
                 "Size": data[0].Size ? data[0].Size.split(',') : null
             }
-            res.send({ data: { message: "SUCCESS", data }, error: err })
+            return res.send({ data: { message: "SUCCESS", data }, error: false })
+
         })
     } catch (error) {
-        res.sendStatus(500);
+        return res.sendStatus(500);
     }
 }
 
@@ -85,20 +99,22 @@ exports.addNew = function (req, res) {
 exports.update = function (req, res) {
     try {
         product.update(req.params.id, req.body, function (err, data) {
-            res.send({ data: data, error: err })
+            return res.send({ data: data, error: err })
         })
     } catch (error) {
-        res.sendStatus(500);
+        return res.sendStatus(500);
     }
 }
 
 // delete 1 product
-exports.deleteImg = function (req, res) {
+exports.deletePro = function (req, res) {
     try {
+        if (!Number(req.params.id)) return res.status(400).json({ data: { message: "Bad Request" }, error: true })
         product.deleteId(req.params.id, function (err, data) {
-            res.send({ data: data, error: err })
+            if (!err) return res.status(200).json({ data: data, error: err })
+            return res.status(400).json({ data: data, error: err })
         })
     } catch (error) {
-        res.sendStatus(500);
+        return res.sendStatus(500);
     }
 }
