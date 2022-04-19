@@ -22,10 +22,24 @@ exports.checkProduct = function (req, res, next) {
     }
 
 }
+//count quantity all product
+exports.countAll = function (req, res, next) {
+    try {
+        product.count(function (err, data) {
+            if (err) return res.sendStatus(500)
+            else {
+                req.countPage = data[0].Total;
+                next();
+            }
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}
 // get all product
 exports.getList = function (req, res) {
     try {
-        let dataPage = { page: req.query.page, page_size: req.query.page_size }
+        let dataPage = (req.query.page && req.query.page_size) ? { page: req.query.page, page_size: req.query.page_size } : null
         product.getAll(dataPage, function (err, data) {
             if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
             data = data.map((item, index, data) => {
@@ -48,7 +62,12 @@ exports.getList = function (req, res) {
                     "Size": item.Size ? item.Size.split(',') : null
                 }
             })
-            return res.send({ data: { message: "SUCCESS", data }, error: false })
+            pagination = (req.query.page && req.query.page_size) ? {
+                page: req.query.page > 0 ? req.query.page : 1,
+                page_size: req.query.page_size > 0 ? req.query.page_size : 10,
+                totalRows: req.countPage
+            } : { totalRows: req.countPage }
+            return res.send({ data: { message: "SUCCESS", data, pagination }, error: false })
         })
     } catch (error) {
         return res.sendStatus(500);

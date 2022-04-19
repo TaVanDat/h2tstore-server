@@ -4,7 +4,7 @@ const productController = require('../Controllers/product.controller')
 try {
 
 
-    router.get('/list', productController.getList)
+    router.get('/list', productController.countAll, productController.getList)
     router.get('/:id', productController.getById)
 
     router.post('/add', productController.checkProduct, productController.addNew)

@@ -3,34 +3,50 @@ const sql = require('mssql')
 
 //result is callback function
 module.exports = function () {
+    let page_size, page, sqlQuery;
+    //count quantity all product
+    this.count = async function (result) {
+        const sqlString = 'SELECT COUNT(*) AS Total FROM Product'
+        const pool = await conn;
+        return pool.request()
+            .query(sqlString, function (err, response) {
+                if (response.recordset.length > 0) { result(false, response.recordset); }
+                else { result(true, null); }
+            })
+    }
     // get all product
     this.getAll = async function (data, result) {
         if (data) {
-            let page_size = data.page_size;
-            let page = (data.page - 1) * 10;
-            const sqlString = `SELECT * FROM Product Where DeletedAt IS NULL ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
-            const pool = await conn
-            return pool.request()
-                .query(sqlString, function (error, rec) {
-                    if (rec.recordset.length > 0) {
-                        result(null, rec.recordset);
-                    }
-                    else
-                        result(true, null);
-                })
+            page_size = data.page_size > 0 ? data.page_size : 10;
+            page = data.page > 0 ? (data.page - 1) * page_size : 0;
+            sqlQuery = `SELECT * FROM Product Where DeletedAt IS NULL ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
         }
         else {
-            const sqlString = 'SELECT * FROM Product where DeletedAt is null';
-            const pool = await conn
-            return pool.request()
-                .query(sqlString, function (error, rec) {
-                    if (rec.recordset.length > 0) {
-                        result(null, rec.recordset);
-                    }
-                    else
-                        result(true, null);
-                })
+            sqlQuery = 'SELECT * FROM Product where DeletedAt is null';
         }
+        // const sqlString = !data ? sqlString2 : sqlString1
+        const pool = await conn
+        return pool.request()
+            .query(sqlQuery, function (error, rec) {
+                if (rec.recordset.length > 0) {
+                    result(null, rec.recordset);
+                }
+                else
+                    result(true, null);
+            })
+        // }
+        // else {
+        //     const sqlString = 'SELECT * FROM Product where DeletedAt is null';
+        //     const pool = await conn
+        //     return pool.request()
+        //         .query(sqlString, function (error, rec) {
+        //             if (rec.recordset.length > 0) {
+        //                 result(null, rec.recordset);
+        //             }
+        //             else
+        //                 result(true, null);
+        //         })
+        // }
     }
     this.getDetail = async function (id, result) {
         const sqlString = 'SELECT * FROM Product where Id = @id';
