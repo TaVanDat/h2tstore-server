@@ -16,7 +16,7 @@ module.exports = function () {
             })
     }
     this.regis = async function (newData, result) {
-        const sqlString = 'INSERT INTO Account (Name,Gender,Dob,Email,Phone,Address,UserName,Password,StatusId,ImageId) VALUES(@code,@name,@gender,@dob,@email,@phone,@address,@userName,@password,1,@imageId)';
+        const sqlString = 'INSERT INTO Account (Name,Gender,Dob,Email,Phone,Address,UserName,Password,StatusId,Image,Role) VALUES(@name,@gender,@dob,@email,@phone,@address,@userName,@password,1,@image,1)';
         const pool = await conn
         return pool.request()
             .input('name', sql.NVarChar, newData.Name)
@@ -27,7 +27,7 @@ module.exports = function () {
             .input('address', sql.NVarChar, newData.Address)
             .input('userName', sql.NVarChar, newData.UserName)
             .input('password', sql.NVarChar, newData.Password)
-            .input('imageId', sql.BigInt, newData.ImageId)
+            .input('image', sql.NVarChar, newData.Image)
             .query(sqlString, function (error, rec) {
                 if (!error) {
                     result(null, { message: 'REGISTER_SUCCESS' });
