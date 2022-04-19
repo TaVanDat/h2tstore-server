@@ -19,5 +19,5 @@ const getUser = require('../Controllers/user.controller')
 
 router.get('/user-list', getUser.getUser)
 router.get('/:id', getUser.userId)
-router.post('/update', getUser.updateUser)
+router.put('/update', getUser.checkLogin, getUser.updateUser)
 module.exports = router

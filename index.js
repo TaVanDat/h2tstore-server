@@ -27,15 +27,15 @@ const users = require('./app/Routers/user.route')
 const image = require('./app/Routers/Image.route')
 app.use('/api/v1/authentication', userAuth);
 app.use('/api/v1/product', product);
-app.use('/api/v1/users', authenToken, users);
+app.use('/api/v1/users', users);
 app.use('/api/v1/image', image);
 function authenToken(req, res, next) {
     //'Bearer [token]'
     try {
         const token = req.headers?.authorization?.split(' ')[1]
-        if (!token) { res.sendStatus(401); return }
+        if (!token) { return res.status(401).json({ message: 'Unauthorized', statusCode: 401 }); }
         jwt.verify(token, process.env.ACCESS_TOKEN, (err, data) => {
-            if (err) res.sendStatus(403)
+            if (err) res.status(403).json({ message: 'Forbidden', statusCode: 403 })
             else {
                 // console.log(data.Id);
                 req.data = data.Id
@@ -43,7 +43,7 @@ function authenToken(req, res, next) {
             }
         })
     } catch (error) {
-        res.status(403).send({ err: [{ error }] })
+        return res.status(403).send({ err: [{ error }] })
     }
 }
 

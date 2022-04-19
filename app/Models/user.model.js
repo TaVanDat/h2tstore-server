@@ -1,5 +1,6 @@
 const conn = require('../../connect');
 const sql = require('mssql');
+const moment = require('moment');
 
 module.exports = function () {
     this.getAll = async function (result) {
@@ -28,19 +29,19 @@ module.exports = function () {
             })
     }
     this.update = async function (id, newData, result) {
-        const sqlString = "update Account set Name = @name, Gender= @gender, Dob = @dob, Phone= @phone, Address = @address, ImageId= @imageId where Id = @id";
+        const sqlString = "update Account set Name = @name, Gender= @gender, Dob = @dob, Phone= @phone, Address = @address, Image= @image where Id = @id";
         const pool = await conn
         return pool.request()
             .input('id', sql.BigInt, Number(id))
             .input('name', sql.NVarChar, newData.Name)
             .input('gender', sql.NVarChar, newData.Gender)
-            .input('dob', sql.DateTime, newData.Dob)
+            .input('dob', sql.DateTime, moment(newData.Dob, 'DD-MM-YYYY').format('MM-DD-YYYY'))
             .input('phone', sql.NVarChar, newData.Phone)
             .input('address', sql.NVarChar, newData.Address)
-            .input('imageId', sql.BigInt, newData.ImageId)
+            .input('image', sql.NVarChar, newData.Image)
             .query(sqlString, function (err, response) {
                 if (!err) {
-                    result(null, response.recordset)
+                    result(false, newData)
                 }
                 else result(true, { message: "Không thành công!" })
             })
