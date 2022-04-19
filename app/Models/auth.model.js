@@ -16,10 +16,9 @@ module.exports = function () {
             })
     }
     this.regis = async function (newData, result) {
-        const sqlString = 'INSERT INTO Account (Code,Name,Gender,Dob,Email,Phone,Address,UserName,Password,StatusId,ImageId) VALUES(@code,@name,@gender,@dob,@email,@phone,@address,@userName,@password,1,@imageId)';
+        const sqlString = 'INSERT INTO Account (Name,Gender,Dob,Email,Phone,Address,UserName,Password,StatusId,ImageId) VALUES(@code,@name,@gender,@dob,@email,@phone,@address,@userName,@password,1,@imageId)';
         const pool = await conn
         return pool.request()
-            .input('code', sql.NVarChar, newData.Code)
             .input('name', sql.NVarChar, newData.Name)
             .input('gender', sql.NVarChar, newData.Gender)
             .input('dob', sql.DateTime, newData.Dob)
@@ -34,14 +33,15 @@ module.exports = function () {
                     result(null, { message: 'REGISTER_SUCCESS' });
                 }
                 else
-                    result(true, { message: 'REGISTER_FAIL' });
+                    result(true, { message: "FAILED", statusCode: 400, status: 'Bad Request' });
             })
     }
-    this.postUser = async function (newData, result) {
-        const sqlString = 'SELECT Id,Code,Email,Password FROM Account Where Email = @email';
+    this.signIn = async function (newData, result) {
+        const sqlString = 'SELECT Id,Email,UserName FROM Account Where Email = @email and Password = @password';
         const pool = await conn
         return pool.request()
             .input('email', sql.NVarChar, newData.Email)
+            .input('password', sql.NVarChar, newData.Password)
             .query(sqlString, function (error, rec) {
                 if (rec.recordset.length > 0) {
                     result(null, rec.recordset);
