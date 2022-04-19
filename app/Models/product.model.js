@@ -3,17 +3,34 @@ const sql = require('mssql')
 
 //result is callback function
 module.exports = function () {
-    this.getAll = async function (result) {
-        const sqlString = 'SELECT * FROM Product where DeletedAt is null';
-        const pool = await conn
-        return pool.request()
-            .query(sqlString, function (error, rec) {
-                if (rec.recordset.length > 0) {
-                    result(null, rec.recordset);
-                }
-                else
-                    result(true, null);
-            })
+    // get all product
+    this.getAll = async function (data, result) {
+        if (data) {
+            let page_size = data.page_size;
+            let page = (data.page - 1) * 10;
+            const sqlString = `SELECT * FROM Product Where DeletedAt IS NULL ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
+            const pool = await conn
+            return pool.request()
+                .query(sqlString, function (error, rec) {
+                    if (rec.recordset.length > 0) {
+                        result(null, rec.recordset);
+                    }
+                    else
+                        result(true, null);
+                })
+        }
+        else {
+            const sqlString = 'SELECT * FROM Product where DeletedAt is null';
+            const pool = await conn
+            return pool.request()
+                .query(sqlString, function (error, rec) {
+                    if (rec.recordset.length > 0) {
+                        result(null, rec.recordset);
+                    }
+                    else
+                        result(true, null);
+                })
+        }
     }
     this.getDetail = async function (id, result) {
         const sqlString = 'SELECT * FROM Product where Id = @id';
@@ -99,6 +116,21 @@ module.exports = function () {
                 }
                 else
                     result(true, { message: "Xóa không thành công!" });
+            })
+    }
+    //Phân trang tất cả sản phẩm
+    this.getAllPage = async function (data, result) {
+        let page_size = data.page_size;
+        let page = (data.page - 1) * 10;
+        const sqlString = `SELECT * FROM Product Where DeletedAt IS NULL ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
+        const pool = await conn
+        return pool.request()
+            .query(sqlString, function (error, rec) {
+                if (rec.recordset.length > 0) {
+                    result(null, rec.recordset);
+                }
+                else
+                    result(true, null);
             })
     }
 }

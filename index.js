@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const compression = require('compression');
 const app = express();
-app.use(compression());
+app.use(compression({ level: 6, threshold: 100000 }));
 
 const PORT = process.env.PORT || 5000;
 // const sql = require('mssql')
