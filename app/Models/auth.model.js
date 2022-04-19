@@ -1,5 +1,6 @@
 const conn = require('../../connect');
 const sql = require('mssql');
+const moment = require('moment');
 
 module.exports = function () {
     this.getEmail = async function (newData, result) {
@@ -16,12 +17,12 @@ module.exports = function () {
             })
     }
     this.regis = async function (newData, result) {
-        const sqlString = 'INSERT INTO Account (Name,Gender,Dob,Email,Phone,Address,UserName,Password,StatusId,Image,Role) VALUES(@name,@gender,@dob,@email,@phone,@address,@userName,@password,1,@image,1)';
+        const sqlString = 'INSERT INTO Account (Name,Gender,Dob,Email,Phone,Address,UserName,Password,StatusId,Image) VALUES(@name,@gender,@dob,@email,@phone,@address,@userName,@password,1,@image)';
         const pool = await conn
         return pool.request()
             .input('name', sql.NVarChar, newData.Name)
             .input('gender', sql.NVarChar, newData.Gender)
-            .input('dob', sql.DateTime, newData.Dob)
+            .input('dob', sql.DateTime, moment(newData.Dob, 'DD-MM-YYYY').format('MM-DD-YYYY'))
             .input('email', sql.NVarChar, newData.Email)
             .input('phone', sql.NVarChar, newData.Phone)
             .input('address', sql.NVarChar, newData.Address)

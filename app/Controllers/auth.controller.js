@@ -7,7 +7,7 @@ exports.checkMail = function (req, res, next) {
     try {
         users.getEmail(req.body, function (err, data) {
             if (err) { next(); }
-            else { return res.send({ message: "Email is exist!" }); }
+            else { return res.status(400).json({ message: "Email is exist!" }); }
         })
     } catch (error) {
         return res.sendStatus(500);
