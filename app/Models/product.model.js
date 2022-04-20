@@ -4,7 +4,6 @@ const sql = require('mssql')
 //result is callback function
 module.exports = function () {
     let page_size, page, sqlQuery;
-    let pagination = `ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
     //count quantity all product
     this.count = async function (result) {
         const sqlString = 'SELECT COUNT(*) AS Total FROM Product WHERE DeletedAt IS NULL'
