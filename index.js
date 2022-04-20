@@ -25,6 +25,9 @@ const userAuth = require('./app/Routers/auth.route')
 const product = require('./app/Routers/product.route')
 const users = require('./app/Routers/user.route')
 const image = require('./app/Routers/Image.route')
+
+
+
 app.use('/api/v1/authentication', userAuth);
 app.use('/api/v1/product', product);
 app.use('/api/v1/users', users);

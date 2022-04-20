@@ -196,3 +196,114 @@ exports.getListCoat = function (req, res) {
         return res.sendStatus(500);
     }
 }
+
+
+
+//get product coat Pant
+exports.countAllCoatPant = function (req, res, next) {
+    try {
+        product.countCoatPant(function (err, data) {
+            if (err) return res.sendStatus(500)
+            else {
+                req.countPage = data[0].TotalPant;
+                next();
+            }
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}
+
+exports.getListCoatPant = function (req, res) {
+    try {
+        let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size } : null
+        product.getCoatPant(dataPage, function (err, data) {
+            if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
+            data = data.map((item, index, data) => {
+                return {
+                    "Id": item.Id,
+                    "Code": item.Code,
+                    "Name": item.Name,
+                    "Description": item.Description,
+                    "Price": item.Price,
+                    "StatusId": item.StatusId,
+                    "UnitOfMeasureId": item.UnitOfMeasureId,
+                    "SalePrice": item.SalePrice,
+                    "Quantity": item.Quantity,
+                    "Count": item.Count,
+                    "CategoryId": item.CategoryId,
+                    "BuyerStoreId": item.BuyerStoreId,
+                    "CreatedAt": item.CreatedAt,
+                    "UpdatedAt": item.UpdatedAt,
+                    "Image": item.Image ? item.Image.split(',') : null,
+                    "Size": item.Size ? item.Size.split(',') : null
+                }
+            })
+            pagination = req.query.page ? {
+                "page": req.query.page > 0 ? Number(req.query.page) : 1,
+                "page_size": req.query.page_size > 0 ? Number(req.query.page_size) : 10,
+                "totalRows": req.countPage
+            } : { totalRows: req.countPage }
+            return res.send({ data: { message: "SUCCESS", data, pagination }, error: false })
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}
+
+
+
+//get product follow CategoryId from params
+
+exports.countAllCategoryId = function (req, res, next) {
+    try {
+        if (!Number(req.params.id)) return res.status(400).json({ data: { message: "Bad Request" }, error: true })
+        product.countProductCategory(req.params.id, function (err, data) {
+            if (err) return res.sendStatus(500)
+            else {
+                req.countPage = data[0].TotalCoat;
+                next();
+            }
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}
+
+exports.getProductCategoryId = function (req, res) {
+    try {
+        let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size } : null
+        product.getProductCategory(req.params.id, dataPage, function (err, data) {
+            if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
+            data = data.map((item, index, data) => {
+                return {
+                    "Id": item.Id,
+                    "Code": item.Code,
+                    "Name": item.Name,
+                    "Description": item.Description,
+                    "Price": item.Price,
+                    "StatusId": item.StatusId,
+                    "UnitOfMeasureId": item.UnitOfMeasureId,
+                    "SalePrice": item.SalePrice,
+                    "Quantity": item.Quantity,
+                    "Count": item.Count,
+                    "CategoryId": item.CategoryId,
+                    "BuyerStoreId": item.BuyerStoreId,
+                    "CreatedAt": item.CreatedAt,
+                    "UpdatedAt": item.UpdatedAt,
+                    "Image": item.Image ? item.Image.split(',') : null,
+                    "Size": item.Size ? item.Size.split(',') : null
+                }
+            })
+            pagination = req.query.page ? {
+                "page": req.query.page > 0 ? Number(req.query.page) : 1,
+                "page_size": req.query.page_size > 0 ? Number(req.query.page_size) : 10,
+                "totalRows": req.countPage
+            } : { totalRows: req.countPage }
+            return res.send({ data: { message: "SUCCESS", data, pagination }, error: false })
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}
+

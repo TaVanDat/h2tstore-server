@@ -4,6 +4,7 @@ const sql = require('mssql')
 //result is callback function
 module.exports = function () {
     let page_size, page, sqlQuery;
+    let pagination = `ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
     //count quantity all product
     this.count = async function (result) {
         const sqlString = 'SELECT COUNT(*) AS Total FROM Product WHERE DeletedAt IS NULL'
@@ -123,7 +124,9 @@ module.exports = function () {
     }
     // lay het cac san pham loai ao
     this.countCoat = async function (result) {
-        const sqlString = 'SELECT COUNT(*) AS TotalCoat FROM Product WHERE (CategoryId =1 or CategoryId =2 or CategoryId=3) and DeletedAt IS NULL'
+        const sqlString = "select COUNT(*) AS TotalCoat " +
+            "from Product join Category on Product.CategoryId = Category.Id " +
+            "where Product.DeletedAt IS NULL and Category.Code = 'ao'"
         const pool = await conn;
         return pool.request()
             .query(sqlString, function (err, response) {
@@ -135,10 +138,13 @@ module.exports = function () {
         if (data) {
             page_size = data.page_size > 0 ? data.page_size : 10;
             page = data.page > 0 ? (data.page - 1) * page_size : 0;
-            sqlQuery = `SELECT * FROM Product Where (CategoryId =1 or CategoryId =2 or CategoryId=3) and DeletedAt IS NULL ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
+            sqlQuery = `select Product.Id,Product.Code,Product.Name,Description,Price,Product.StatusId,UnitOfMeasureId,SalePrice,Quantity,Count,CategoryId,BuyerStoreId,Product.CreatedAt,Product.UpdatedAt,Product.Image,Size
+            from Product JOIN Category on Product.CategoryId = Category.Id where Product.DeletedAt IS NULL and Category.Code = 'ao' `
+                + ` ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
         }
         else {
-            sqlQuery = 'SELECT * FROM Product where (CategoryId =1 or CategoryId =2 or CategoryId=3) and DeletedAt IS NULL';
+            sqlQuery = "select Product.Id,Product.Code,Product.Name,Description,Price,Product.StatusId,UnitOfMeasureId,SalePrice,Quantity,Count,CategoryId,BuyerStoreId,Product.CreatedAt,Product.UpdatedAt,Product.Image,Size " +
+                "from Product join Category on Product.CategoryId = Category.Id where Product.DeletedAt IS NULL and Category.Code = 'ao'";
         }
         // const sqlString = !data ? sqlString2 : sqlString1
         const pool = await conn
@@ -151,4 +157,112 @@ module.exports = function () {
                     result(true, null);
             })
     }
+
+
+    //get all product have category is Pant
+    this.countCoatPant = async function (result) {
+        const sqlString = "select COUNT(*) AS TotalPant " +
+            "from Product join Category on Product.CategoryId = Category.Id " +
+            "where Product.DeletedAt IS NULL and Category.Code = 'quan'"
+        const pool = await conn;
+        return pool.request()
+            .query(sqlString, function (err, response) {
+                if (response.recordset.length > 0) { result(false, response.recordset); }
+                else { result(true, null); }
+            })
+    }
+    this.getCoatPant = async function (data, result) {
+        if (data) {
+            page_size = data.page_size > 0 ? data.page_size : 10;
+            page = data.page > 0 ? (data.page - 1) * page_size : 0;
+            sqlQuery = `select Product.Id,Product.Code,Product.Name,Description,Price,Product.StatusId,UnitOfMeasureId,SalePrice,Quantity,Count,CategoryId,BuyerStoreId,Product.CreatedAt,Product.UpdatedAt,Product.Image,Size
+            from Product JOIN Category on Product.CategoryId = Category.Id where Product.DeletedAt IS NULL and Category.Code = 'quan' `
+                + ` ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
+        }
+        else {
+            sqlQuery = "select Product.Id,Product.Code,Product.Name,Description,Price,Product.StatusId,UnitOfMeasureId,SalePrice,Quantity,Count,CategoryId,BuyerStoreId,Product.CreatedAt,Product.UpdatedAt,Product.Image,Size " +
+                "from Product join Category on Product.CategoryId = Category.Id where Product.DeletedAt IS NULL and Category.Code = 'quan'";
+        }
+        // const sqlString = !data ? sqlString2 : sqlString1
+        const pool = await conn
+        return pool.request()
+            .query(sqlQuery, function (error, rec) {
+                if (rec.recordset.length > 0) {
+                    result(null, rec.recordset);
+                }
+                else
+                    result(true, null);
+            })
+    }
+
+
+
+
+
+    //get category follow CategoryId
+    this.countProductCategory = async function (id, result) {
+        const sqlString = 'SELECT COUNT(*) AS TotalCoat FROM Product WHERE CategoryId = @id and DeletedAt IS NULL'
+        const pool = await conn;
+        return pool.request()
+            .input('id', sql.BigInt, Number(id))
+            .query(sqlString, function (err, response) {
+                if (response.recordset.length > 0) { result(false, response.recordset); }
+                else { result(true, null); }
+            })
+    }
+    this.getProductCategory = async function (id, data, result) {
+        if (data) {
+            page_size = data.page_size > 0 ? data.page_size : 10;
+            page = data.page > 0 ? (data.page - 1) * page_size : 0;
+            sqlQuery = `SELECT * FROM Product Where CategoryId = @id and DeletedAt IS NULL ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
+        }
+        else {
+            sqlQuery = 'SELECT * FROM Product where CategoryId = @id and DeletedAt IS NULL';
+        }
+        const pool = await conn
+        return pool.request()
+            .input('id', sql.BigInt, Number(id))
+            .query(sqlQuery, function (error, rec) {
+                if (rec.recordset.length > 0) {
+                    result(null, rec.recordset);
+                }
+                else
+                    result(true, null);
+            })
+    }
+
+
+
+
+    //get all product have category is Balo
+    this.countCoatBalo = async function (result) {
+        const sqlString = 'SELECT COUNT(*) AS TotalCoat FROM Product WHERE CategoryId = 9  and DeletedAt IS NULL'
+        const pool = await conn;
+        return pool.request()
+            .query(sqlString, function (err, response) {
+                if (response.recordset.length > 0) { result(false, response.recordset); }
+                else { result(true, null); }
+            })
+    }
+    this.getCoatBalo = async function (data, result) {
+        if (data) {
+            page_size = data.page_size > 0 ? data.page_size : 10;
+            page = data.page > 0 ? (data.page - 1) * page_size : 0;
+            sqlQuery = `SELECT * FROM Product Where CategoryId = 9 and DeletedAt IS NULL ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
+        }
+        else {
+            sqlQuery = 'SELECT * FROM Product where CategoryId = 9 and DeletedAt IS NULL';
+        }
+        const pool = await conn
+        return pool.request()
+            .query(sqlQuery, function (error, rec) {
+                if (rec.recordset.length > 0) {
+                    result(null, rec.recordset);
+                }
+                else
+                    result(true, null);
+            })
+    }
+
+
 }

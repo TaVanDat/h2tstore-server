@@ -8,6 +8,15 @@ try {
     router.get('/list', productController.countAll, productController.getList)
     //get product coat
     router.get('/ao', productController.countAllCoat, productController.getListCoat)
+    //get product coat T-Shirt
+    // router.get('/ao-thun', productController.countAllCoatTShirt, productController.getListCoatTShirt)
+
+
+
+
+    //get product follow CategoryId send from client
+    router.get('/category/:id', productController.countAllCategoryId, productController.getProductCategoryId)
+
 
 
 
