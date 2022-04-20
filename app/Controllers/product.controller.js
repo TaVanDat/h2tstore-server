@@ -39,7 +39,7 @@ exports.countAll = function (req, res, next) {
 // get all product
 exports.getList = function (req, res) {
     try {
-        let dataPage = (req.query.page && req.query.page_size) ? { page: req.query.page, page_size: req.query.page_size } : null
+        let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size } : null
         product.getAll(dataPage, function (err, data) {
             if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
             data = data.map((item, index, data) => {
@@ -62,10 +62,10 @@ exports.getList = function (req, res) {
                     "Size": item.Size ? item.Size.split(',') : null
                 }
             })
-            pagination = (req.query.page && req.query.page_size) ? {
-                page: req.query.page > 0 ? req.query.page : 1,
-                page_size: req.query.page_size > 0 ? req.query.page_size : 10,
-                totalRows: req.countPage
+            pagination = req.query.page ? {
+                "page": req.query.page > 0 ? Number(req.query.page) : 1,
+                "page_size": req.query.page_size > 0 ? Number(req.query.page_size) : 10,
+                "totalRows": req.countPage
             } : { totalRows: req.countPage }
             return res.send({ data: { message: "SUCCESS", data, pagination }, error: false })
         })
