@@ -123,7 +123,7 @@ module.exports = function () {
     }
     // lay het cac san pham loai ao
     this.countCoat = async function (result) {
-        const sqlString = 'SELECT COUNT(*) AS TotalCoat FROM Product WHERE CategoryId =1 or CategoryId =2 or CategoryId=3'
+        const sqlString = 'SELECT COUNT(*) AS TotalCoat FROM Product WHERE (CategoryId =1 or CategoryId =2 or CategoryId=3) and DeletedAt IS NULL'
         const pool = await conn;
         return pool.request()
             .query(sqlString, function (err, response) {
@@ -135,10 +135,10 @@ module.exports = function () {
         if (data) {
             page_size = data.page_size > 0 ? data.page_size : 10;
             page = data.page > 0 ? (data.page - 1) * page_size : 0;
-            sqlQuery = `SELECT * FROM Product Where DeletedAt IS NULL AND CategoryId = 1 ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
+            sqlQuery = `SELECT * FROM Product Where (CategoryId =1 or CategoryId =2 or CategoryId=3) and DeletedAt IS NULL ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
         }
         else {
-            sqlQuery = 'SELECT * FROM Product where DeletedAt is null';
+            sqlQuery = 'SELECT * FROM Product where (CategoryId =1 or CategoryId =2 or CategoryId=3) and DeletedAt IS NULL';
         }
         // const sqlString = !data ? sqlString2 : sqlString1
         const pool = await conn

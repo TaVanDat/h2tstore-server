@@ -144,11 +144,26 @@ exports.deletePro = function (req, res) {
     }
 }
 
-//get page list all product
-exports.getPage = function (req, res) {
+
+//get product coat
+exports.countAllCoat = function (req, res, next) {
     try {
-        let dataPage = { page: req.query.page, page_size: req.query.page_size }
-        product.getAllPage(dataPage, function (err, data) {
+        product.countCoat(function (err, data) {
+            if (err) return res.sendStatus(500)
+            else {
+                req.countPage = data[0].TotalCoat;
+                next();
+            }
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}
+
+exports.getListCoat = function (req, res) {
+    try {
+        let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size } : null
+        product.getCoat(dataPage, function (err, data) {
             if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
             data = data.map((item, index, data) => {
                 return {
@@ -170,7 +185,12 @@ exports.getPage = function (req, res) {
                     "Size": item.Size ? item.Size.split(',') : null
                 }
             })
-            return res.send({ data: { message: "SUCCESS", data }, error: false })
+            pagination = req.query.page ? {
+                "page": req.query.page > 0 ? Number(req.query.page) : 1,
+                "page_size": req.query.page_size > 0 ? Number(req.query.page_size) : 10,
+                "totalRows": req.countPage
+            } : { totalRows: req.countPage }
+            return res.send({ data: { message: "SUCCESS", data, pagination }, error: false })
         })
     } catch (error) {
         return res.sendStatus(500);
