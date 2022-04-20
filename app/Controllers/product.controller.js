@@ -59,7 +59,8 @@ exports.getList = function (req, res) {
                     "CreatedAt": item.CreatedAt,
                     "UpdatedAt": item.UpdatedAt,
                     "Image": item.Image ? item.Image.split(',') : null,
-                    "Size": item.Size ? item.Size.split(',') : null
+                    "Size": item.Size ? item.Size.split(',') : null,
+                    "Color": item.Color ? item.Color.split(',') : null
                 }
             })
             pagination = req.query.page ? {
@@ -96,7 +97,8 @@ exports.getById = function (req, res) {
                 "CreatedAt": data[0].CreatedAt,
                 "UpdatedAt": data[0].UpdatedAt,
                 "Image": data[0].Image ? data[0].Image.split(',') : null,
-                "Size": data[0].Size ? data[0].Size.split(',') : null
+                "Size": data[0].Size ? data[0].Size.split(',') : null,
+                "Color": data[0].Color ? data[0].Color.split(',') : null
             }
             return res.send({ data: { message: "SUCCESS", data }, error: false })
 
