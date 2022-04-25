@@ -35,3 +35,16 @@ exports.login = function (req, res) {
         return res.sendStatus(500);
     }
 }
+// exports.logout = function (req, res) {
+//     try {
+//         const token = req.headers?.authorization?.split(' ')[1]
+//         if (!token) { return res.status(401).json({ message: 'Unauthorized', statusCode: 401 }); }
+//         else {
+//             // res.clearCookie('token');
+//             res.cookie('token', 'token')
+//             return res.send({ data: { message: 'LOGOUT_SUCCESS' } })
+//         }
+//     } catch (error) {
+//         return res.status(500).json({ message: 'Internal Server Error', error: error })
+//     }
+// }
