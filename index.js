@@ -4,10 +4,8 @@ const cors = require('cors')
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const compression = require('compression');
-const cookieParser = require('cookie-parser');
 const app = express();
 app.use(compression({ level: 6, threshold: 100000 }));
-app.use(cookieParser())
 const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
