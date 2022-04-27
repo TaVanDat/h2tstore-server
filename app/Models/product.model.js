@@ -264,4 +264,29 @@ module.exports = function () {
     }
 
 
+    //get list Latest product
+    this.getLatestProduct = async function (result) {
+        sqlQuery = 'SELECT TOP (15) * FROM Product WHERE DeletedAt IS NULL ORDER BY CreatedAt DESC';
+        const pool = await conn
+        return pool.request()
+            .query(sqlQuery, function (err, rec) {
+                if (rec.recordset.length > 0) {
+                    result(null, rec.recordset);
+                }
+                else
+                    result(true, null);
+            })
+    }
+    this.getSaleProduct = async function (result) {
+        sqlQuery = 'SELECT TOP (15) * FROM Product WHERE DeletedAt IS NULL and Price<>SalePrice ORDER BY CreatedAt DESC';
+        const pool = await conn
+        return pool.request()
+            .query(sqlQuery, function (err, rec) {
+                if (rec.recordset.length > 0) {
+                    result(null, rec.recordset);
+                }
+                else
+                    result(true, null);
+            })
+    }
 }

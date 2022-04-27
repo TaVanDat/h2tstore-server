@@ -309,3 +309,65 @@ exports.getProductCategoryId = function (req, res) {
     }
 }
 
+exports.getLatest = function (req, res) {
+    try {
+        product.getLatestProduct(function (err, data) {
+            if (err) return res.status(404).json({ data: { message: "Not Found" }, error: err })
+            data = data.map((item, index, data) => {
+                return {
+                    "Id": item.Id,
+                    "Code": item.Code,
+                    "Name": item.Name,
+                    "Description": item.Description,
+                    "Price": item.Price,
+                    "StatusId": item.StatusId,
+                    "UnitOfMeasureId": item.UnitOfMeasureId,
+                    "SalePrice": item.SalePrice,
+                    "Quantity": item.Quantity,
+                    "Count": item.Count,
+                    "CategoryId": item.CategoryId,
+                    "BuyerStoreId": item.BuyerStoreId,
+                    "CreatedAt": item.CreatedAt,
+                    "UpdatedAt": item.UpdatedAt,
+                    "Image": item.Image ? item.Image.split(',') : null,
+                    "Size": item.Size ? item.Size.split(',') : null
+                }
+            })
+
+            return res.send({ data: { message: "SUCCESS", data }, error: false })
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}
+exports.getSaleProduct75 = function (req, res) {
+    try {
+        product.getSaleProduct(function (err, data) {
+            if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
+            data = data.map((item, index, data) => {
+                return {
+                    "Id": item.Id,
+                    "Code": item.Code,
+                    "Name": item.Name,
+                    "Description": item.Description,
+                    "Price": item.Price,
+                    "StatusId": item.StatusId,
+                    "UnitOfMeasureId": item.UnitOfMeasureId,
+                    "SalePrice": item.SalePrice,
+                    "Quantity": item.Quantity,
+                    "Count": item.Count,
+                    "CategoryId": item.CategoryId,
+                    "BuyerStoreId": item.BuyerStoreId,
+                    "CreatedAt": item.CreatedAt,
+                    "UpdatedAt": item.UpdatedAt,
+                    "Image": item.Image ? item.Image.split(',') : null,
+                    "Size": item.Size ? item.Size.split(',') : null
+                }
+            })
+
+            return res.send({ data: { message: "SUCCESS", data }, error: false })
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}

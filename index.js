@@ -25,6 +25,7 @@ const users = require('./app/Routers/user.route')
 const image = require('./app/Routers/Image.route')
 const category = require('./app/Routers/category.route')
 const cartUser = require('./app/Routers/cart.route')
+const news = require('./app/Routers/news.route')
 
 
 
@@ -34,6 +35,7 @@ app.use('/api/v1/users', users);
 app.use('/api/v1/image', image);
 app.use('/api/v1/category', category);
 app.use('/api/v1/cart', cartUser);
+app.use('/api/v1/news', news);
 
 
 function authenToken(req, res, next) {
