@@ -266,7 +266,9 @@ module.exports = function () {
 
     //get list Latest product
     this.getLatestProduct = async function (result) {
-        sqlQuery = 'SELECT TOP (15) * FROM Product WHERE DeletedAt IS NULL ORDER BY CreatedAt DESC';
+        sqlQuery = "SELECT TOP 15 p.Id,p.Code,p.Name,p.Description,p.Price,p.SalePrice,p.Quantity,p.CategoryId,p.CreatedAt,p.Color,p.Image,p.Size " +
+            "FROM Product p JOIN Category c ON p.CategoryId = c.Id " +
+            "WHERE p.DeletedAt IS NULL and Price = SalePrice and (c.Code ='ao' or c.Code = 'quan') ORDER BY p.CreatedAt DESC";
         const pool = await conn
         return pool.request()
             .query(sqlQuery, function (err, rec) {
@@ -281,6 +283,20 @@ module.exports = function () {
         sqlQuery = 'SELECT TOP (15) * FROM Product WHERE DeletedAt IS NULL and Price<>SalePrice ORDER BY CreatedAt DESC';
         const pool = await conn
         return pool.request()
+            .query(sqlQuery, function (err, rec) {
+                if (rec.recordset.length > 0) {
+                    result(null, rec.recordset);
+                }
+                else
+                    result(true, null);
+            })
+    }
+    this.getRelative = async function (id, CategoryId, result) {
+        sqlQuery = 'SELECT top 10 * FROM Product WHERE CategoryId = @CategoryId and Id <> @id and DeletedAt IS NULL ORDER BY NEWId()';
+        const pool = await conn
+        return pool.request()
+            .input('CategoryId', sql.BigInt, Number(CategoryId))
+            .input('id', sql.BigInt, Number(id))
             .query(sqlQuery, function (err, rec) {
                 if (rec.recordset.length > 0) {
                     result(null, rec.recordset);

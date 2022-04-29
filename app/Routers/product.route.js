@@ -15,6 +15,9 @@ router.get('/latest', productController.getLatest)
 // get sale product
 router.get('/sale75', productController.getSaleProduct75)
 
+// get relative product 
+router.get('/relative', productController.getRelativeProduct);
+
 
 //get product follow CategoryId send from client
 router.get('/category/:id', productController.countAllCategoryId, productController.getProductCategoryId)
