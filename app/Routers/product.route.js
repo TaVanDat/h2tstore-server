@@ -7,6 +7,7 @@ const productController = require('../Controllers/product.controller')
 router.get('/list', productController.countAll, productController.getList)
 //get product coat
 router.get('/ao', productController.countAllCoat, productController.getListCoat)
+router.get('/quan', productController.countAllCoatPant, productController.getListCoat)
 //get product coat T-Shirt
 // router.get('/ao-thun', productController.countAllCoatTShirt, productController.getListCoatTShirt)
 
