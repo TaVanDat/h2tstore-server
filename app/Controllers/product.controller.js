@@ -1,6 +1,6 @@
 const Product = require('../Models/product.model');
 var product = new Product();
-
+let type, title;
 exports.checkProduct = function (req, res, next) {
     try {
         let checks = { Code: req.body.Code, id: req.params.id }
@@ -39,7 +39,9 @@ exports.countAll = function (req, res, next) {
 // get all product
 exports.getList = function (req, res) {
     try {
-        let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size } : null
+        type = req.query.type ? req.query.type : 'asc'; //type sort 
+        title = req.query.title ? req.query.title : 'Id'; //title sort 
+        let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size, type, title } : null
         product.getAll(dataPage, function (err, data) {
             if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
             data = data.map((item, index, data) => {
@@ -164,7 +166,9 @@ exports.countAllCoat = function (req, res, next) {
 
 exports.getListCoat = function (req, res) {
     try {
-        let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size } : null
+        type = req.query.type ? req.query.type : 'asc'; //type sort 
+        title = req.query.title ? req.query.title : 'Id'; //title sort 
+        let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size, title, type } : null
         product.getCoat(dataPage, function (err, data) {
             if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
             data = data.map((item, index, data) => {
@@ -218,7 +222,9 @@ exports.countAllCoatPant = function (req, res, next) {
 
 exports.getListCoatPant = function (req, res) {
     try {
-        let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size } : null
+        type = req.query.type ? req.query.type : 'asc'; //type sort 
+        title = req.query.title ? req.query.title : 'Id'; //title sort 
+        let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size, title, type } : null
         product.getCoatPant(dataPage, function (err, data) {
             if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
             data = data.map((item, index, data) => {
@@ -274,7 +280,9 @@ exports.countAllCategoryId = function (req, res, next) {
 
 exports.getProductCategoryId = function (req, res) {
     try {
-        let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size } : null
+        type = req.query.type ? req.query.type : 'asc'; //type sort 
+        title = req.query.title ? req.query.title : 'Id'; //title sort 
+        let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size, title, type } : null
         product.getProductCategory(req.params.id, dataPage, function (err, data) {
             if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
             data = data.map((item, index, data) => {

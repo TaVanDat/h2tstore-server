@@ -19,7 +19,7 @@ module.exports = function () {
         if (data) {
             page_size = data.page_size > 0 ? data.page_size : 10;
             page = data.page > 0 ? (data.page - 1) * page_size : 0;
-            sqlQuery = `SELECT * FROM Product Where DeletedAt IS NULL ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
+            sqlQuery = `SELECT * FROM Product Where DeletedAt IS NULL ORDER BY ${data.title} ${data.type} OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
         }
         else {
             sqlQuery = 'SELECT * FROM Product where DeletedAt is null';
@@ -139,7 +139,7 @@ module.exports = function () {
             page = data.page > 0 ? (data.page - 1) * page_size : 0;
             sqlQuery = `select Product.Id,Product.Code,Product.Name,Description,Price,Product.StatusId,UnitOfMeasureId,SalePrice,Quantity,Count,CategoryId,BuyerStoreId,Product.CreatedAt,Product.UpdatedAt,Product.Image,Size
             from Product JOIN Category on Product.CategoryId = Category.Id where Product.DeletedAt IS NULL and Category.Code = 'ao' `
-                + ` ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
+                + ` ORDER BY ${data.title} ${data.type} OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
         }
         else {
             sqlQuery = "select Product.Id,Product.Code,Product.Name,Description,Price,Product.StatusId,UnitOfMeasureId,SalePrice,Quantity,Count,CategoryId,BuyerStoreId,Product.CreatedAt,Product.UpdatedAt,Product.Image,Size " +
@@ -176,7 +176,7 @@ module.exports = function () {
             page = data.page > 0 ? (data.page - 1) * page_size : 0;
             sqlQuery = `select Product.Id,Product.Code,Product.Name,Description,Price,Product.StatusId,UnitOfMeasureId,SalePrice,Quantity,Count,CategoryId,BuyerStoreId,Product.CreatedAt,Product.UpdatedAt,Product.Image,Size
             from Product JOIN Category on Product.CategoryId = Category.Id where Product.DeletedAt IS NULL and Category.Code = 'quan' `
-                + ` ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
+                + ` ORDER BY ${data.title} ${data.type} OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
         }
         else {
             sqlQuery = "select Product.Id,Product.Code,Product.Name,Description,Price,Product.StatusId,UnitOfMeasureId,SalePrice,Quantity,Count,CategoryId,BuyerStoreId,Product.CreatedAt,Product.UpdatedAt,Product.Image,Size " +
@@ -213,7 +213,7 @@ module.exports = function () {
         if (data) {
             page_size = data.page_size > 0 ? data.page_size : 10;
             page = data.page > 0 ? (data.page - 1) * page_size : 0;
-            sqlQuery = `SELECT * FROM Product Where CategoryId = @id and DeletedAt IS NULL ORDER BY Id OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
+            sqlQuery = `SELECT * FROM Product Where CategoryId = @id and DeletedAt IS NULL ORDER BY ${data.title} ${data.type} OFFSET ${page} ROWS FETCH NEXT ${page_size} ROWS ONLY`;
         }
         else {
             sqlQuery = 'SELECT * FROM Product where CategoryId = @id and DeletedAt IS NULL';
