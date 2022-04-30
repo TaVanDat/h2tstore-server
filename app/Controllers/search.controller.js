@@ -20,11 +20,11 @@ exports.countAll = function (req, res, next) {
 }
 // get all product search
 exports.getProSearch = function (req, res) {
-    let page_size, page, type, q, end, start;
+    let page_size, page, type, end, start, totalRows, searchString;
     try {
         page = req.query.page ? req.query.page : 1;
         page_size = req.query.page_size ? req.query.page_size : 10;
-        end = page_size > 0 ? page_size : 10;
+        end = page_size > 0 ? page * page_size : 10;
         start = page > 0 ? (page - 1) * page_size : 0;
         type = req.query.type ? req.query.type : 'asc'; //type sort 
         title = req.query.title ? req.query.title : 'Id'; //title sort 
@@ -36,9 +36,9 @@ exports.getProSearch = function (req, res) {
                     return item
                 }
             })
-            totalRows = data.length
-            newData = data.slice(start, end);
-            data = newData.map((item, index, data) => {
+            totalRows = data.length;
+            const nextData = data.slice(start, end);
+            const lastData = nextData.map((item, index, data) => {
                 return {
                     "Id": item.Id,
                     "Code": item.Code,
@@ -64,7 +64,7 @@ exports.getProSearch = function (req, res) {
                 "page_size": page_size > 0 ? Number(page_size) : 10,
                 "totalRows": totalRows
             } : { totalRows: totalRows }
-            return res.send({ data: { message: "SUCCESS", data, pagination }, error: false })
+            return res.send({ data: { message: "SUCCESS", data: lastData, pagination }, error: false })
         })
     } catch (error) {
         return res.status(500).json({ error });
