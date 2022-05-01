@@ -20,14 +20,16 @@ exports.countAll = function (req, res, next) {
 }
 // get all product search
 exports.getProSearch = function (req, res) {
-    let page_size, page, type, end, start, totalRows, searchString;
+    let page_size, page, type = req.query.type, title = req.query.title, end, start, totalRows, searchString;
     try {
+        const objectCheck = { Id: 'Id', Name: 'Name', Code: 'Code', Price: 'Price', SalePrice: 'SalePrice', CreatedAt: 'CreatedAt', Quantity: 'Quantity', Count: 'Count' }
+        const objectType = { asc: 'asc', desc: 'desc', ASC: 'ASC', DESC: 'DESC' }
         page = req.query.page ? req.query.page : 1;
         page_size = req.query.page_size ? req.query.page_size : 10;
         end = page_size > 0 ? page * page_size : 10;
         start = page > 0 ? (page - 1) * page_size : 0;
-        type = req.query.type ? req.query.type : 'asc'; //type sort 
-        title = req.query.title ? req.query.title : 'Id'; //title sort 
+        type = type && (objectType.hasOwnProperty(type) ? type : 'asc'); //type sort
+        title = title && (objectCheck.hasOwnProperty(title) ? title : 'Id'); //title sort 
         searchString = req.query.q ? String(req.query.q) : ''; //compare character
         searchPro.getSearch({ type, title }, function (err, data) {
             if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
