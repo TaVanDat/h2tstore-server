@@ -38,7 +38,7 @@ module.exports = function () {
             })
     }
     this.signIn = async function (newData, result) {
-        const sqlString = 'SELECT Id,Email,UserName,Role FROM Account Where Email = @email and Password = @password';
+        const sqlString = 'SELECT Id,Email,UserName,Role,Name FROM Account Where Email = @email and Password = @password';
         const pool = await conn
         return pool.request()
             .input('email', sql.NVarChar, newData.Email)

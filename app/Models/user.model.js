@@ -46,5 +46,32 @@ module.exports = function () {
                 else result(true, { message: "Không thành công!" })
             })
     }
+
+    // recover password
+    this.checkEmail = async function (email, result) {
+        const sqlString = "Select Email From Account where Email = @email";
+        const pool = await conn
+        return pool.request()
+            .input('email', sql.NVarChar, email)
+            .query(sqlString, function (err, response) {
+                if (!err) {
+                    result(true, {})
+                }
+                else result(false, {})
+            })
+    }
+    this.recover = async function (newData, result) {
+        const sqlString = "update Account set Password = @password where Email = @email";
+        const pool = await conn
+        return pool.request()
+            .input('email', sql.NVarChar, newData.Email)
+            .input('password', sql.NVarChar, newData.Password)
+            .query(sqlString, function (err, response) {
+                if (!err) {
+                    result(false, { message: "Đổi thành công!" })
+                }
+                else result(true, { message: "Không thành công!" })
+            })
+    }
 }
 

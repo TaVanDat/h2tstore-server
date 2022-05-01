@@ -24,6 +24,7 @@
     "moment": "^2.29.3",
     "mongoose": "^6.2.7",
     "mssql": "^8.0.2",
+    "nodemailer": "^6.7.4",
     "nodemon": "^2.0.15"
   }
 }

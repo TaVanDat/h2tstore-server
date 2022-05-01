@@ -52,3 +52,24 @@ exports.updateUser = function (req, res) {
         return res.sendStatus(500)
     }
 }
+
+exports.CheckEmail = function (req, res, next) {
+    try {
+        user.checkEmail(req.body.Email, function (err, response) {
+            if (!err) return res.status(404).json({ data: { message: "Email is not exists!" }, error: true })
+            next();
+        })
+    } catch (error) {
+
+    }
+}
+exports.recoverPassword = function (req, res) {
+    try {
+        user.recover({ Password: req.user, Email: req.body.Email }, function (err, response) {
+            if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
+            return res.send({ message: "Success!" })
+        })
+    } catch (error) {
+
+    }
+}
