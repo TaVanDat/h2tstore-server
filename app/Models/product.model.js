@@ -230,7 +230,25 @@ module.exports = function () {
             })
     }
 
+    // get all sale75
 
+    this.getAllSale75 = async function (data, result) {
+        if (data) {
+            sqlQuery = `SELECT * FROM Product Where Price<>SalePrice and DeletedAt IS NULL ORDER BY ${data.title} ${data.type}`;
+        }
+        else {
+            sqlQuery = 'SELECT * FROM Product where Price<>SalePrice and DeletedAt IS NULL';
+        }
+        const pool = await conn
+        return pool.request()
+            .query(sqlQuery, function (error, rec) {
+                if (rec.recordset.length > 0) {
+                    result(null, rec.recordset);
+                }
+                else
+                    result(true, null);
+            })
+    }
 
 
     //get all product have category is Balo

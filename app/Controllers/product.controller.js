@@ -1,6 +1,6 @@
 const Product = require('../Models/product.model');
 var product = new Product();
-let type, title;
+let type, title, end, start;
 const objectCheck = { Id: 'Id', Name: 'Name', Code: 'Code', Price: 'Price', SalePrice: 'SalePrice', CreatedAt: 'CreatedAt', Quantity: 'Quantity', Count: 'Count' }
 const objectType = { asc: 'asc', desc: 'desc', ASC: 'ASC', DESC: 'DESC' }
 exports.checkProduct = function (req, res, next) {
@@ -41,8 +41,8 @@ exports.countAll = function (req, res, next) {
 // get all product
 exports.getList = function (req, res) {
     try {
-        type = req.query.type && (objectType.hasOwnProperty(req.query.type) ? req.query.type : 'asc'); //type sort
-        title = req.query.title && (objectCheck.hasOwnProperty(req.query.title) ? req.query.title : 'Id'); //title sort
+        type = req.query.type ? (objectType.hasOwnProperty(req.query.type) ? req.query.type : 'asc') : 'asc'; //type sort
+        title = req.query.title ? (objectCheck.hasOwnProperty(req.query.title) ? req.query.title : 'Id') : 'Price'; //title sort
         let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size, type, title } : null
         product.getAll(dataPage, function (err, data) {
             if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
@@ -168,8 +168,10 @@ exports.countAllCoat = function (req, res, next) {
 
 exports.getListCoat = function (req, res) {
     try {
-        type = req.query.type && (objectType.hasOwnProperty(req.query.type) ? req.query.type : 'asc'); //type sort
-        title = req.query.title && (objectCheck.hasOwnProperty(req.query.title) ? req.query.title : 'Id'); //title sort
+        type = req.query.type;
+        title = req.query.title
+        type = type ? (objectType.hasOwnProperty(type) ? type : 'asc') : 'asc'; //type sort
+        title = title ? (objectCheck.hasOwnProperty(title) ? title : 'Id') : 'Price'; //title sort
         let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size, title, type } : null
         product.getCoat(dataPage, function (err, data) {
             if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
@@ -224,8 +226,8 @@ exports.countAllCoatPant = function (req, res, next) {
 
 exports.getListCoatPant = function (req, res) {
     try {
-        type = req.query.type && (objectType.hasOwnProperty(req.query.type) ? req.query.type : 'asc'); //type sort
-        title = req.query.title && (objectCheck.hasOwnProperty(req.query.title) ? req.query.title : 'Id'); //title sort
+        type = req.query.type ? (objectType.hasOwnProperty(req.query.type) ? req.query.type : 'asc') : 'asc'; //type sort
+        title = req.query.title ? (objectCheck.hasOwnProperty(req.query.title) ? req.query.title : 'Id') : 'Price'; //title sort
         let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size, title, type } : null
         product.getCoatPant(dataPage, function (err, data) {
             if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
@@ -282,8 +284,8 @@ exports.countAllCategoryId = function (req, res, next) {
 
 exports.getProductCategoryId = function (req, res) {
     try {
-        type = req.query.type && (objectType.hasOwnProperty(req.query.type) ? req.query.type : 'asc'); //type sort
-        title = req.query.title && (objectCheck.hasOwnProperty(req.query.title) ? req.query.title : 'Id'); //title sort
+        type = req.query.type ? (objectType.hasOwnProperty(req.query.type) ? req.query.type : 'asc') : 'asc'; //type sort
+        title = req.query.title ? (objectCheck.hasOwnProperty(req.query.title) ? req.query.title : 'Id') : 'Price'; //title sort
         let dataPage = req.query.page ? { page: req.query.page, page_size: req.query.page_size, title, type } : null
         product.getProductCategory(req.params.id, dataPage, function (err, data) {
             if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
@@ -408,6 +410,141 @@ exports.getRelativeProduct = function (req, res) {
         else {
             return res.status(400).json({ data: { message: "Bad Request!" } })
         }
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}
+
+
+//get all sale75
+exports.getAllSaleProduct = function (req, res) {
+    try {
+        const objectSale = { 'thun-short': 'thun-short', 'somi-dai': 'somi-dai', 'phu-kien': 'phu-kien' }
+        let page_size, page, page_link, dataFilter;
+        page_link = req.query.page_link ? req.query.page_link : ''
+        type = req.query.type;
+        title = req.query.title;
+        page = req.query.page ? req.query.page : 1;
+        page_size = req.query.page_size ? req.query.page_size : 10;
+        end = page_size > 0 ? page * page_size : 10;
+        start = page > 0 ? (page - 1) * page_size : 0;
+        page_link = page_link ? (objectSale.hasOwnProperty(page_link) ? page_link : false) : 'r'
+        type = type ? (objectType.hasOwnProperty(type) ? type : 'asc') : 'asc'; //type sort
+        title = title ? (objectCheck.hasOwnProperty(title) ? title : 'Price') : 'Price'; //title sort
+        product.getAllSale75({ title, type }, function (err, data) {
+            if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
+            if (page_link === false) { return res.status(404).json({ data: { message: "Not Found" }, error: true }) }
+            // console.log(page_link)
+            else {
+                switch (page_link) {
+                    case 'r':
+                        dataFilter = data.map(item => item)
+                        break;
+                    case 'thun-short':
+                        dataFilter = data.filter(item => {
+                            if (item.CategoryId === '1' || item.CategoryId === '5') { return item }
+                        })
+                        break;
+                    case 'somi-dai':
+                        dataFilter = data.filter(item => {
+                            if (item.CategoryId === '3' || item.CategoryId === '7') { return item }
+                        })
+                        break;
+
+                    case 'phu-kien':
+                        dataFilter = data.filter(item => {
+                            if (item.CategoryId === '11') { return item }
+                        })
+                        break;
+
+                }
+
+                totalRows = dataFilter.length
+                const nextData = dataFilter.slice(start, end);
+                lastData = nextData.map((item, index, data) => {
+                    return {
+                        "Id": item.Id,
+                        "Code": item.Code,
+                        "Name": item.Name,
+                        "Description": item.Description,
+                        "Price": item.Price,
+                        "StatusId": item.StatusId,
+                        "UnitOfMeasureId": item.UnitOfMeasureId,
+                        "SalePrice": item.SalePrice,
+                        "Quantity": item.Quantity,
+                        "Count": item.Count,
+                        "CategoryId": item.CategoryId,
+                        "BuyerStoreId": item.BuyerStoreId,
+                        "CreatedAt": item.CreatedAt,
+                        "UpdatedAt": item.UpdatedAt,
+                        "Image": item.Image ? item.Image.split(',') : null,
+                        "Size": item.Size ? item.Size.split(',') : null
+                    }
+                })
+                pagination = req.query.page ? {
+                    "page": page > 0 ? Number(page) : 1,
+                    "page_size": page_size > 0 ? Number(page_size) : 10,
+                    "totalRows": totalRows
+                } : { "totalRows": totalRows }
+                return res.send({ data: { message: "SUCCESS", data: lastData, pagination }, error: false })
+            }
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}
+
+
+//get sale ao thun - quan short
+
+exports.getSaleThunShort = function (req, res) {
+    try {
+        let page_size, page, page_link;
+        page_link = req.query.page_link ? req.query.page_link : '';
+        type = req.query.type;
+        title = req.query.title;
+        page = req.query.page ? req.query.page : 1;
+        page_size = req.query.page_size ? req.query.page_size : 10;
+        end = page_size > 0 ? page * page_size : 10;
+        start = page > 0 ? (page - 1) * page_size : 0;
+        type = type ? (objectType.hasOwnProperty(type) ? type : 'asc') : 'asc'; //type sort
+        title = title ? (objectCheck.hasOwnProperty(title) ? title : 'Price') : 'Price'; //title sort
+        product.getAllSale75({ title, type }, function (err, data) {
+            if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
+            data = data.filter(item => {
+                if (item.CategoryId === 1 || item.CategoryId === 5)
+                    return item
+            })
+            totalRows = data.length;
+            const nextData = data.slice(start, end);
+            lastData = nextData.map((item, index, data) => {
+                return {
+                    "Id": item.Id,
+                    "Code": item.Code,
+                    "Name": item.Name,
+                    "Description": item.Description,
+                    "Price": item.Price,
+                    "StatusId": item.StatusId,
+                    "UnitOfMeasureId": item.UnitOfMeasureId,
+                    "SalePrice": item.SalePrice,
+                    "Quantity": item.Quantity,
+                    "Count": item.Count,
+                    "CategoryId": item.CategoryId,
+                    "BuyerStoreId": item.BuyerStoreId,
+                    "CreatedAt": item.CreatedAt,
+                    "UpdatedAt": item.UpdatedAt,
+                    "Image": item.Image ? item.Image.split(',') : null,
+                    "Size": item.Size ? item.Size.split(',') : null
+                }
+            })
+            totalRows = data.length;
+            pagination = req.query.page ? {
+                "page": req.query.page > 0 ? Number(req.query.page) : 1,
+                "page_size": req.query.page_size > 0 ? Number(req.query.page_size) : 10,
+                "totalRows": totalRows
+            } : { "totalRows": totalRows }
+            return res.send({ data: { message: "SUCCESS", data: lastData, pagination }, error: false })
+        })
     } catch (error) {
         return res.sendStatus(500);
     }

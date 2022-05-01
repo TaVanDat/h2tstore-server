@@ -6,8 +6,12 @@ const productController = require('../Controllers/product.controller')
 //get all product
 router.get('/list', productController.countAll, productController.getList)
 //get product coat
-router.get('/ao', productController.countAllCoat, productController.getListCoat)
-router.get('/quan', productController.countAllCoatPant, productController.getListCoat)
+router.get('/collection/ao', productController.countAllCoat, productController.getListCoat)
+router.get('/collection/quan', productController.countAllCoatPant, productController.getListCoatPant)
+router.get('/collection/sale75', productController.getAllSaleProduct)
+// router.get('/collection/sale75/:name', productController.countAllCoatPant, productController.getListCoatPant)
+// router.get('/collection/sale75/somi-dai', productController.countAllCoatPant, productController.getListCoatPant)
+// router.get('/collection/sale75/phu-kien', productController.countAllCoatPant, productController.getListCoatPant)
 //get product coat T-Shirt
 // router.get('/ao-thun', productController.countAllCoatTShirt, productController.getListCoatTShirt)
 
