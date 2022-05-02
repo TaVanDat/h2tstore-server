@@ -28,8 +28,8 @@ exports.getProSearch = function (req, res) {
         page_size = req.query.page_size ? req.query.page_size : 10;
         end = page_size > 0 ? page * page_size : 10;
         start = page > 0 ? (page - 1) * page_size : 0;
-        type = type && (objectType.hasOwnProperty(type) ? type : 'asc'); //type sort
-        title = title && (objectCheck.hasOwnProperty(title) ? title : 'Id'); //title sort 
+        type = type ? (objectType.hasOwnProperty(type) ? type : 'asc') : 'asc'; //type sort
+        title = title ? (objectCheck.hasOwnProperty(title) ? title : 'Id') : "Id"; //title sort 
         searchString = req.query.q ? String(req.query.q) : ''; //compare character
         searchPro.getSearch({ type, title }, function (err, data) {
             if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
