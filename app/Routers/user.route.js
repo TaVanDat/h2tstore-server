@@ -1,5 +1,6 @@
 const express = require('express');
 var nodemailer = require('nodemailer')
+require('dotenv').config()
 const router = express.Router();
 const getUser = require('../Controllers/user.controller')
 // const authenToken = require('../middleWares/auth.middleware')
@@ -27,8 +28,8 @@ router.post('/send/recover', getUser.CheckEmail, function (req, res, next) {
     var transporter = nodemailer.createTransport({ // config mail server
         service: "gmail",
         auth: {
-            user: "tavandat764@gmail.com",
-            pass: "goodgamesdragon"
+            user: process.env.ADMIN_MAIL,
+            pass: process.env.ADMIN_PASSWORD
         }
     });
     req.user = Array.apply(null, Array(8)).map(function () { return s.charAt(Math.floor(Math.random() * s.length)); }).join('');
