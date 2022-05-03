@@ -78,9 +78,9 @@ exports.addToCart = function (req, res, next) {
                     TotalQuantity: Number(req.TotalQuantity) + 1,
                     TotalPrice: dataCart.TotalPrice + Number(req.TotalPrice)
                 })
-            console.log(
-                req.cart.find(item => Number(item.ProductId) === Number(dataCart.ProductId))
-            )
+            // console.log(
+            //     req.cart.find(item => Number(item.ProductId) === Number(dataCart.ProductId))
+            // )
             cart.updateCart(dataCart, function (err, response) {
                 if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
                 next();
