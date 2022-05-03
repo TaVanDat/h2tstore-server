@@ -32,7 +32,7 @@ exports.getCartMiddleWare = function (req, res, next) {
             // if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
             req.cart = data || [];//trả về data kể cả rỗng
             req.TotalQuantity = data.length;
-            console.log(req.cart)
+            // console.log(req.cart)
             req.TotalPrice = data.reduce((sum, element) => sum + element.SalePrice * element.Quantity, 0);
             next();
         })
