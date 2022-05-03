@@ -32,7 +32,7 @@ exports.getCartMiddleWare = function (req, res, next) {
             // if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
             req.cart = data || [];//trả về data kể cả rỗng
             req.TotalQuantity = data.length;
-            console.log(req.TotalQuantity)
+            console.log(req.cart)
             req.TotalPrice = data.reduce((sum, element) => sum + element.SalePrice * element.Quantity, 0);
             next();
         })
@@ -62,7 +62,7 @@ exports.addToCart = function (req, res, next) {
         }
         //đã tồn tại user
         else {
-            (req.cart || []).findIndex(item => item.Color === dataCart.Color & item.Size === dataCart.Size) !== -1  //neu co san pham trung 
+            (req.cart).findIndex(item => item.ProductId === dataCart.ProductId & item.Color === dataCart.Color & item.Size === dataCart.Size) !== -1  //neu co san pham trung 
                 ?
                 (dataCart = {
                     ...dataCart,
@@ -78,6 +78,9 @@ exports.addToCart = function (req, res, next) {
                     TotalQuantity: Number(req.TotalQuantity) + 1,
                     TotalPrice: dataCart.TotalPrice + Number(req.TotalPrice)
                 })
+            console.log(
+                req.cart.find(item => Number(item.ProductId) === Number(dataCart.ProductId))
+            )
             cart.updateCart(dataCart, function (err, response) {
                 if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
                 next();
