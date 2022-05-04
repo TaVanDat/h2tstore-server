@@ -174,7 +174,7 @@ exports.paymentCart = function (req, res, next) {
         CustomerId = req.data.Id;
         // console.log(CustomerId)
         cart.paymentCart(CustomerId, function (err, data) {
-            console.log(data)
+            // console.log(data)
             if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
             next();
         })

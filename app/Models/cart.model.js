@@ -128,7 +128,7 @@ module.exports = function () {
     this.paymentCart = async function (CustomerId, result) {
         sqlQuery = "delete from ProductCartMapping where CartId = (SELECT top 1 Id FROM Cart WHERE CustomerId = @id) \n" +
             "delete from Cart where Id = (SELECT top 1 Id FROM Cart WHERE CustomerId = @id)";///sẽ bị lỗi khi nhiều cartId vậy nên thêm cả userId nữa
-        console.log(sqlQuery)
+        // console.log(sqlQuery)
         const pool = await conn;
         return pool.request()
             .input('id', sql.BigInt, CustomerId)
