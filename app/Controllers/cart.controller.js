@@ -49,13 +49,16 @@ exports.addToCart = function (req, res, next) {
         SalePrice = req.body.SalePrice;
         Color = req.body.Color;
         Size = req.body.Size;
+        TotalQuantity = 1;
         TotalPrice = Quantity * SalePrice;// tong gia moi
         if (!Number(ProductId) && !Number(Quantity) && !Number(SalePrice) && !Color && !Size) {
             return res.status(400).json({ data: { message: "Bad Request", data: [] } })
         }
         dataCart = { CustomerId, ProductId, Quantity, SalePrice, Color, Size, TotalQuantity, TotalPrice }
+        // console.log(dataCart)
         if (req.TotalQuantity === 0) {//neu chua ton tai userID
             cart.addEmptyCart(dataCart, function (err, response) {
+                // console.log(err, response)
                 if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
                 next();
             })

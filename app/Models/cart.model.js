@@ -24,7 +24,7 @@ module.exports = function () {
     this.addEmptyCart = async function (newData, result) {
         if (newData) { //có cùng user
             sqlQuery = "INSERT INTO Cart(CustomerId,TotalPrice,TotalQuantity) VALUES(@id,@totalPrice,@totalQuantity) \n" +
-                "INSERT INTO ProductCartMapping(ProductId,CartId,SalePrice,Quantity,Size,Color) VALUES (@productId,(SELECT Id FROM Cart WHERE CustomerId = @id),@salePrice,@quantity,@size,@color)"
+                "INSERT INTO ProductCartMapping(ProductId,CartId,SalePrice,Quantity,Size,Color) VALUES (@productId,(SELECT TOP 1 Id FROM Cart WHERE CustomerId = @id),@salePrice,@quantity,@size,@color)"
             const pool = await conn;
             return pool.request()
                 .input('id', sql.BigInt, newData.CustomerId)
