@@ -5,7 +5,7 @@ var cart = new Cart();
 
 
 let CustomerId, ProductId, Quantity, SalePrice, Color, Size, TotalQuantity, TotalPrice, dataCart, checkSizeColor = true, checkExist = true;
-
+let Code, OrderDate, AccountId, Total, TransformMethod, OrderProductId, UnitOfMeasureId, Amount;
 
 
 // get all cart khi hiển thị
@@ -90,7 +90,6 @@ exports.addToCart = function (req, res, next) {
             })
         }
     } catch (error) {
-        console.log(error)
         return res.sendStatus(500);
     }
 }
@@ -111,6 +110,85 @@ exports.deleteCartPro = function (req, res) {
             return res.send({ data: { message: "SUCCESS!" }, Error: err })
         })
     } catch (error) {
+
+    }
+}
+
+
+exports.UpdateOrderTable = function (req, res, next) {
+    try {
+        const s = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let dataUpdate;
+        AccountId = req.data.Id;
+        Code = Array.apply(null, Array(8)).map(function () { return s.charAt(Math.floor(Math.random() * s.length)); }).join('');
+        OrderDate = req.body.OrderDate;
+        Total = req.body.Total;
+        TransformMethod = req.body.TransformMethod;
+        dataUpdate = { Code, OrderDate, AccountId, Total, TransformMethod }
+        cart.updateOrder(dataUpdate, function (err, data) {
+            // console.log(data)
+            if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
+            req.order = data
+            // console.log(req.order)
+            next();
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}
+
+exports.UpdateOrderContentTable = function (req, res, next) {
+    try {
+        // let dataUpdateContent;
+        // OrderProductId = req.order.Id;
+        // ProductId = req.body.ProductId;
+        // UnitOfMeasureId = req.body.UnitOfMeasureId;
+        // Quantity = req.body.Quantity;
+        // Price = req.body.Price;
+        // Amount = req.body.Amount;
+        // dataUpdateContent = { ProductId, OrderProductId, UnitOfMeasureId, Quantity, Price, Amount }
+        let CartPayment = JSON.parse(JSON.stringify(req.body.CartPayment)).map(item => {
+            return {
+                OrderProductId: req.order[0].Id,
+                ProductId: item.ProductId,
+                UnitOfMeasureId: item.UnitOfMeasureId,
+                Quantity: item.Quantity,
+                Price: item.SalePrice,
+                Amount: item.Amount,
+            }
+        })
+        // console.log(CartPayment)
+        cart.updateOrderContent(CartPayment, function (err, data) {
+            // console.log(err)
+            // console.log(data)
+            if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
+            next();
+        })
+    } catch (error) {
+        // console.log(error)
+        return res.sendStatus(500);
+    }
+}
+exports.paymentCart = function (req, res, next) {
+    try {
+        CustomerId = req.data.Id;
+        // console.log(CustomerId)
+        cart.paymentCart(CustomerId, function (err, data) {
+            console.log(data)
+            if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
+            next();
+        })
+    } catch (error) {
+        // console.log(error)
+        return res.sendStatus(500);
+    }
+}
+
+exports.payment = function (req, res, next) {
+    try {
+
+    } catch (error) {
+        return res.sendStatus(500);
 
     }
 }
