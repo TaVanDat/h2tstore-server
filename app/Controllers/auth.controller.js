@@ -27,6 +27,7 @@ exports.login = function (req, res) {
     try {
         users.signIn(req.body, function (err, data) {
             if (!data) return res.status(404).json({ data: { message: 'LOGIN FAILED', status: 404, } })
+            if (data && Number(data[0].StatusId) === 2) return res.status(404).json({ data: { message: 'Your account is disabled', status: 404, } })
             const user = { Id: data[0].Id, Email: data[0].Email }
             const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: "1h" })
             return res.send({ data: { message: 'LOGIN_SUCCESS', data, token: accessToken }, error: err })

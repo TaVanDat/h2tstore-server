@@ -73,5 +73,22 @@ module.exports = function () {
                 else result(true, { message: "Không thành công!" })
             })
     }
+
+
+    this.adminUpdate = async function (newData, result) {
+        const sqlString = "update Account set StatusId = @StatusId, Role= @Role where Id = @id";
+        const pool = await conn
+        return pool.request()
+            .input('id', sql.BigInt, Number(newData.Id))
+            .input('StatusId', sql.BigInt, newData.StatusId)
+            .input('Role', sql.NVarChar, newData.Role)
+            .query(sqlString, function (err, response) {
+                if (!err) {
+                    result(false, [])
+                }
+                else result(true, { message: "Không thành công!" })
+            })
+    }
+
 }
 

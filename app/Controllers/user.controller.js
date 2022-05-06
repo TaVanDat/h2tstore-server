@@ -73,3 +73,21 @@ exports.recoverPassword = function (req, res) {
 
     }
 }
+
+
+
+// admin
+
+exports.adminUpdateUser = function (req, res) {
+    try {
+        user.adminUpdate(req.body, function (err, response) {
+            // console.log(req.body)
+            // console.log(err)
+            if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
+            // let newDataUpdate = Object.assign(req.data,response)
+            return res.send({ data: { message: "SUCCESS", data: [] }, error: false })
+        })
+    } catch (err) {
+        return res.sendStatus(500)
+    }
+}
