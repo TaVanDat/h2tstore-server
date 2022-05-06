@@ -1,5 +1,6 @@
 const conn = require('../../connect');
 const sql = require('mssql')
+const moment = require('moment')
 
 //result is callback function
 module.exports = function () {
@@ -109,10 +110,11 @@ module.exports = function () {
 
     }
     this.deleteId = async function (id, result) {
-        const sqlString = "delete from Product  where Id = @id";
+        const sqlString = "update Product set DeletedAt = @DeletedAt  where Id = @id";
         const pool = await conn
         return pool.request()
             .input('id', sql.BigInt, id)
+            .input('DeletedAt', sql.DateTime, moment(new Date()).format("MM-DD-YYYY"))
             .query(sqlString, function (err, rec) {
                 if (!err) {
                     result(null, { message: "Xóa thành công!" });
