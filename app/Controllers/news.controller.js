@@ -36,3 +36,38 @@ exports.getById = function (req, res) {
         return res.sendStatus(500);
     }
 }
+
+exports.newsAdd = function (req, res) {
+    try {
+        news.addNews(req.body, function (err, data) {
+            if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
+            return res.send({ data: { message: "SUCCESS", data }, error: false })
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}
+
+
+exports.updateNews = function (req, res) {
+    try {
+        if (!Number(req.params.id)) return res.status(400).json({ data: { message: "Bad Request" }, error: true })
+        news.update(req.params.id, req.body, function (err, data) {
+            if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
+            return res.send({ data: { message: "SUCCESS", data }, error: false })
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}
+exports.deleteNews = function (req, res) {
+    try {
+        if (!Number(req.params.id)) return res.status(400).json({ data: { message: "Bad Request" }, error: true })
+        news.delete(req.params.id, function (err, data) {
+            if (err) return res.status(404).json({ data: { message: "Not Found" }, error: true })
+            return res.send({ data: { message: "SUCCESS", data }, error: false })
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+}
