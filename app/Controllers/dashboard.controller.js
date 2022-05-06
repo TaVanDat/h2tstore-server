@@ -45,8 +45,6 @@ exports.countAllRevenue = function (req, res, next) {
             if (err) return res.sendStatus(500)
             else {
                 req.countRevenues = data.reduce((sum, element) => sum + element.TotalRevenues, 0)
-                console.log(data)
-                console.log(data.reduce((sum, element) => sum + element.TotalRevenues, 0))
                 next();
             }
         })
