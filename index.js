@@ -27,6 +27,7 @@ const category = require('./app/Routers/category.route')
 const cartUser = require('./app/Routers/cart.route')
 const news = require('./app/Routers/news.route')
 const searchP = require('./app/Routers/search.route')
+const dashboardAdmin = require('./app/Routers/dashboard.route')
 
 
 
@@ -38,6 +39,7 @@ app.use('/api/v1/category', category);
 app.use('/api/v1/cart', cartUser);
 app.use('/api/v1/news', news);
 app.use('/api/v1/search', searchP);
+app.use('/api/v1/dashboard', dashboardAdmin)
 
 
 function authenToken(req, res, next) {
