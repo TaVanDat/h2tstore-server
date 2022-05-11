@@ -82,7 +82,7 @@ module.exports = function () {
         // }
     }
     this.updateOrder = async function (newData, result) {
-        sqlQuery = "insert into OrderProduct (Code,OrderDate,AccountId,Total,StatusId,Used,TransformMethod) values (@Code, @OrderDate, @AccountId, @Total, 1, 1, @TransformMethod) \n" +
+        sqlQuery = "insert into OrderProduct (Code,OrderDate,AccountId,Total,StatusId,Used,TransformMethod) values (@Code, @OrderDate, @AccountId, @Total, 3, 1, @TransformMethod) \n" +
             "SELECT TOP 1 Id FROM OrderProduct WHERE AccountId = @AccountId";
         const pool = await conn;
         return pool.request()
