@@ -419,7 +419,7 @@ exports.getRelativeProduct = function (req, res) {
 //get all sale75
 exports.getAllSaleProduct = function (req, res) {
     try {
-        const objectSale = { 'thun-short': 'thun-short', 'somi-dai': 'somi-dai', 'phu-kien': 'phu-kien' }
+        const objectSale = { 'thun-short': 'thun-short', 'somi-dai': 'somi-dai', 'ao-nu': 'ao-nu' }
         let page_size, page, page_link, dataFilter;
         page_link = req.query.page_link ? req.query.page_link : ''
         type = req.query.type;
@@ -451,7 +451,7 @@ exports.getAllSaleProduct = function (req, res) {
                         })
                         break;
 
-                    case 'phu-kien':
+                    case 'ao-nu':
                         dataFilter = data.filter(item => {
                             if (item.CategoryId === '11') { return item }
                         })
