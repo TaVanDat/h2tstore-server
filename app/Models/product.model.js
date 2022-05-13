@@ -64,7 +64,7 @@ module.exports = function () {
             })
     }
     this.addNews = async function (newData, result) {
-        const sqlString = "INSERT INTO Product (Code,Name,Description,Price,StatusId,UnitOfMeasureId,SalePrice,Quantity,CategoryId,BuyerStoreId,Image,Size) VALUES(@code,@name,@description,@price,1,@unitOfMeasureId,@salePrice,@quantity,@categoryId,@buyerStoreId,@image,@size)";
+        const sqlString = "INSERT INTO Product (Code,Name,Description,Price,StatusId,UnitOfMeasureId,SalePrice,Quantity,CategoryId,BuyerStoreId,Image,Size,Color) VALUES(@code,@name,@description,@price,1,@unitOfMeasureId,@salePrice,@quantity,@categoryId,@buyerStoreId,@image,@size,@Color)";
         const pool = await conn
         return pool.request()
             .input('code', sql.NVarChar, newData.Code)
@@ -78,6 +78,7 @@ module.exports = function () {
             .input('buyerStoreId', sql.BigInt, newData.BuyerStoreId)
             .input('image', sql.NVarChar, newData.Image)
             .input('size', sql.NVarChar, newData.Size)
+            .input('Color', sql.NVarChar, newData.Color)
             .query(sqlString, function (err, rec) {
                 if (!err) {
                     result(null, { message: "SUCCESS" })
@@ -86,7 +87,7 @@ module.exports = function () {
             })
     }
     this.update = async function (id, newData, result) {
-        const sqlString = "update Product set Name = @name, Description = @description, Price = @price, StatusId = @statusId, UnitOfMeasureId = @unitOfMeasureId, SalePrice = @salePrice, Quantity = @quantity, CategoryId = @categoryId, BuyerStoreId = @buyerStoreId, Image = @image, Size = @size where Id = @id";
+        const sqlString = "update Product set Name = @name, Description = @description, Price = @price, StatusId = @statusId, UnitOfMeasureId = @unitOfMeasureId, SalePrice = @salePrice, Quantity = @quantity, CategoryId = @categoryId, BuyerStoreId = @buyerStoreId, Image = @image, Size = @size,Color = @Color where Id = @id";
         const pool = await conn
         return pool.request()
             .input('id', sql.BigInt, id)
@@ -101,6 +102,7 @@ module.exports = function () {
             .input('buyerStoreId', sql.BigInt, newData.BuyerStoreId)
             .input('image', sql.NVarChar, newData.Image)
             .input('size', sql.NVarChar, newData.Size)
+            .input('Color', sql.NVarChar, newData.Color)
             .query(sqlString, function (err, response) {
                 if (!err) {
                     result(null, { message: "Thành công!", status: 200 })
