@@ -216,7 +216,7 @@ exports.getProductsQuantity = function (req, res, next) {
                 Quantity: item.Quantity,
             }
         })
-        console.log(dataOrder)
+        // console.log(dataOrder)
         let dataProduct = []
         cart.getProductQuantity(function (err, data) {
             if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
@@ -231,7 +231,7 @@ exports.getProductsQuantity = function (req, res, next) {
                 }
             }
             req.dataProduct = dataProduct
-            console.log(req.dataProduct)
+            // console.log(req.dataProduct)
             next();
         })
     } catch (error) {
