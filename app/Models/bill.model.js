@@ -20,4 +20,17 @@ module.exports = function () {
                 else { result(true, null); }
             })
     }
+    this.updateStatus = async function (data, result) {
+        const sqlString = 'update OrderProduct set StatusId = @StatusId where Id = @Id '
+        const pool = await conn;
+        return pool.request()
+            .input('Id', sql.BigInt, data.Id)
+            .input('StatusId', sql.BigInt, data.StatusId)
+            .query(sqlString, function (err, response) {
+                if (!err) {
+                    result(false, {})
+                }
+                else result(true, {})
+            })
+    }
 }
