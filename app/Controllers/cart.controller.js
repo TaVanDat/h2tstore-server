@@ -200,7 +200,7 @@ exports.getProductOrders = function (req, res, next) {
         cart.getProductOrder(req.order[0].Id, function (err, data) {
             if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
             req.dataOrder = data
-            // console.log(req.dataOrder)
+            console.log(req.dataOrder)
             next();
         })
     } catch (error) {
@@ -210,20 +210,28 @@ exports.getProductOrders = function (req, res, next) {
 }
 exports.getProductsQuantity = function (req, res, next) {
     try {
-
+        let dataOrder = JSON.parse(JSON.stringify(req.body.CartPayment)).map(item => {
+            return {
+                ProductId: item.ProductId,
+                Quantity: item.Quantity,
+            }
+        })
+        console.log(dataOrder)
+        let dataProduct = []
         cart.getProductQuantity(function (err, data) {
             if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
             for (let i = 0; i < data.length; i++) {
-                for (let j = 0; j < req.dataOrder.length; j++) {
-                    if (data[i].Id === req.dataOrder[j].ProductId) {
-                        req.dataProduct = [{
-                            ProductId: req.dataOrder[j].ProductId,
-                            Quantity: data[i].Quantity - req.dataOrder[j].TotalQuantity
+                for (let j = 0; j < dataOrder.length; j++) {
+                    if (data[i].Id === dataOrder[j].ProductId) {
+                        dataProduct = [...dataProduct, {
+                            ProductId: dataOrder[j].ProductId,
+                            Quantity: data[i].Quantity - dataOrder[j].Quantity
                         }]
                     }
                 }
             }
-            // console.log(req.dataProduct)
+            req.dataProduct = dataProduct
+            console.log(req.dataProduct)
             next();
         })
     } catch (error) {
@@ -239,6 +247,7 @@ exports.updateQuantityProduct = function (req, res, next) {
             if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
             // req.dataOrder = data
             // console.log(req.dataOrder)
+            req.dataProduct = []
             next();
         })
     } catch (error) {
