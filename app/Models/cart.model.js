@@ -104,7 +104,7 @@ module.exports = function () {
         // })
         // console.log(newData)
         sqlQuery = `insert into OrderProductContent(ProductId,OrderProductId,UnitOfMeasureId,Quantity,Price,Amount) values (${newData[0].ProductId},${newData[0].OrderProductId},${newData[0].UnitOfMeasureId},${newData[0].Quantity},${newData[0].Price},${newData[0].Amount})`
-        for (let index = 0; index < newData.length; index++) {
+        for (let index = 1; index < newData.length; index++) {
             sqlQuery += `,(${newData[index].ProductId},${newData[index].OrderProductId},${newData[index].UnitOfMeasureId},${newData[index].Quantity},${newData[index].Price},${newData[index].Amount})`
         }
         // console.log(sqlQuery)
@@ -140,4 +140,51 @@ module.exports = function () {
             })
     }
 
+
+    //lay danh sach san pham trong hoa don
+    this.getProductOrder = async function (id, result) {
+        sqlQuery = "SELECT ProductId, SUM(Quantity) AS 'TotalQuantity'" +
+            "FROM OrderProductContent WHERE OrderProductId = @OrderProductId group by ProductId"
+        const pool = await conn;
+        return pool.request()
+            .input('OrderProductId', sql.BigInt, id)
+            .query(sqlQuery, function (err, rec) {
+                if (rec.recordset.length > 0) {
+                    result(false, rec.recordset);
+                }
+                else
+                    result(true, []);
+            })
+    }
+
+    //lay danh sach san pham trong bang sp
+    this.getProductQuantity = async function (result) {
+        sqlQuery = "SELECT Id, Quantity FROM Product"
+        const pool = await conn;
+        return pool.request()
+            .query(sqlQuery, function (err, rec) {
+                if (rec.recordset.length > 0) {
+                    result(false, rec.recordset);
+                }
+                else
+                    result(true, []);
+            })
+    }
+
+    //tru so luong cua san pham trong bang sp
+    this.updateQuantity = async function (data, result) {
+        sqlQuery = `update Product set Quantity=${data[0].Quantity} where Id = ${data[0].ProductId}`
+        for (let index = 1; index < data.length; index++) {
+            sqlQuery += `\n update Product set Quantity=${data[index].Quantity} where Id = ${data[index].ProductId}`
+        }
+        // console.log(sqlQuery)
+        const pool = await conn;
+        return pool.request()
+            .query(sqlQuery, function (err, rec) {
+                if (!err) {
+                    result(false, { err })
+                }
+                else { result(true, { err }) }
+            })
+    }
 }

@@ -192,3 +192,57 @@ exports.payment = function (req, res, next) {
 
     }
 }
+
+//cap nhat bang sp
+//lay danh sach sp trong hoa don
+exports.getProductOrders = function (req, res, next) {
+    try {
+        cart.getProductOrder(req.order[0].Id, function (err, data) {
+            if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
+            req.dataOrder = data
+            // console.log(req.dataOrder)
+            next();
+        })
+    } catch (error) {
+        // console.log(error)
+        return res.sendStatus(500);
+    }
+}
+exports.getProductsQuantity = function (req, res, next) {
+    try {
+
+        cart.getProductQuantity(function (err, data) {
+            if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
+            for (let i = 0; i < data.length; i++) {
+                for (let j = 0; j < req.dataOrder.length; j++) {
+                    if (data[i].Id === req.dataOrder[j].ProductId) {
+                        req.dataProduct = [{
+                            ProductId: req.dataOrder[j].ProductId,
+                            Quantity: data[i].Quantity - req.dataOrder[j].TotalQuantity
+                        }]
+                    }
+                }
+            }
+            // console.log(req.dataProduct)
+            next();
+        })
+    } catch (error) {
+        // console.log(error)
+        return res.sendStatus(500);
+    }
+}
+
+
+exports.updateQuantityProduct = function (req, res, next) {
+    try {
+        cart.updateQuantity(req.dataProduct, function (err, data) {
+            if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
+            // req.dataOrder = data
+            // console.log(req.dataOrder)
+            next();
+        })
+    } catch (error) {
+        // console.log(error)
+        return res.sendStatus(500);
+    }
+}
