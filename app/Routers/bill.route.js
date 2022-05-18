@@ -7,6 +7,7 @@ const billController = require('../Controllers/bill.controller')
 
 // get all order
 router.get('/all', billController.getList);
+router.get('/:id', billController.getDetails);
 router.put('/update-bill', billController.changeStatus, function (req, res) {
     var transporter = nodemailer.createTransport({ // config mail server
         service: "gmail",

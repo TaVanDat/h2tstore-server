@@ -11,10 +11,11 @@ module.exports = function () {
                 else { result(true, null); }
             })
     }
-    this.getOrderDetail = async function (result) {
-        const sqlString = 'select * from OrderProductContent where '
+    this.getOrderDetail = async function (id, result) {
+        const sqlString = 'select p.Name,od.Price,od.Quantity,od.Amount from OrderProductContent od join Product p on od.ProductId = p.Id where OrderProductId =@id'
         const pool = await conn;
         return pool.request()
+            .input('id', sql.BigInt, Number(id))
             .query(sqlString, function (err, response) {
                 if (response.recordset.length > 0) { result(false, response.recordset); }
                 else { result(true, null); }

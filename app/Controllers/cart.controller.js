@@ -200,7 +200,7 @@ exports.getProductOrders = function (req, res, next) {
         cart.getProductOrder(req.order[0].Id, function (err, data) {
             if (err) return res.status(400).json({ data: { message: "Bad Request", data: [] } })
             req.dataOrder = data
-            console.log(req.dataOrder)
+            // console.log(req.dataOrder)
             next();
         })
     } catch (error) {
