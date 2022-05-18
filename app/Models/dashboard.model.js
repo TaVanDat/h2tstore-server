@@ -31,10 +31,11 @@ module.exports = function () {
                 else { result(true, null); }
             })
     }
-    this.countAllRevenues = async function (result) {
-        const sqlString = 'SELECT Total as TotalRevenues FROM OrderProduct'
+    this.countAllRevenues = async function (month, result) {
+        const sqlString = 'SELECT Total as TotalRevenues FROM OrderProduct MONTH(OrderDate) = @month'
         const pool = await conn;
         return pool.request()
+            .input('month', sql.Int, month ? Number(month) : new Date().getMonth())
             .query(sqlString, function (err, response) {
                 if (response.recordset.length > 0) { result(false, response.recordset); }
                 else { result(true, null); }
