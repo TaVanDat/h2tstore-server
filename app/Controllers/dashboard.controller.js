@@ -41,10 +41,10 @@ exports.countAllOrders = function (req, res, next) {
 }
 exports.countAllRevenue = function (req, res, next) {
     try {
-        dashboard.countAllRevenues(function (err, data) {
+        dashboard.countAllRevenues(req.params.month, function (err, data) {
             if (err) return res.sendStatus(500)
             else {
-                req.countRevenues = data.reduce((sum, element) => sum + element.TotalRevenues, 0)
+                req.countRevenues = data ? data.reduce((sum, element) => sum + element.TotalRevenues, 0) : 0
                 next();
             }
         })
