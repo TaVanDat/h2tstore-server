@@ -32,13 +32,11 @@ module.exports = function () {
             })
     }
     this.countAllRevenues = async function (month, result) {
-        console.log(month)
         const sqlString = 'SELECT Total as TotalRevenues FROM OrderProduct WHERE MONTH(OrderDate) = @month'
         const pool = await conn;
         return pool.request()
             .input('month', sql.Int, month)
             .query(sqlString, function (err, response) {
-                console.log(response.recordset)
                 if (response.recordset.length > 0) { result(false, response.recordset); }
                 else { result(false, []); }
             })
